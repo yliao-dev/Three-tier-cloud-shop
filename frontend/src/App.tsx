@@ -12,6 +12,7 @@ import RegisterPage from "./pages/ReigsterPage";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage";
+import ProductCatalogPage from "./pages/ProductCatalogPage";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -21,8 +22,9 @@ const App = () => {
         <Route index element={<HomePage />} />
         <Route path="register" element={<RegisterPage />} />
         <Route path="login" element={<LoginPage />} />
+        <Route path="products" element={<ProductCatalogPage />} />{" "}
+        {/* 2. Add the route */}
         <Route path="*" element={<ErrorPage />} />
-
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="dashboard" element={<DashboardPage />} />

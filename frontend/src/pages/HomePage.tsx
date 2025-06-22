@@ -9,6 +9,13 @@ const HomePage = () => {
     <div>
       <h1>Welcome to the Cloud Shop</h1>
 
+      {/* Main navigation available to everyone */}
+      <nav style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+        <Link to="/products">View Products</Link>
+      </nav>
+
+      <hr />
+
       {/* 2. Use a ternary operator to render content conditionally */}
       {user ? (
         // This view is shown IF a user is logged in

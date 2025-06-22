@@ -13,6 +13,11 @@ export default defineConfig({
         target: "http://user-service:8081",
         changeOrigin: true,
       },
+      // Requests to /api/products... go to the catalog-service on port 8082
+      "/api/products": {
+        target: "http://catalog-service:8082",
+        changeOrigin: true,
+      },
     },
   },
 });
