@@ -15,6 +15,7 @@ services:
       # This 'environment' section injects the variable from the .env file
       # into the user-service container.
       - MONGO_URI=${MONGO_URI}
+      - JWT_SERCRET=${JWT_SERCRET}
 
   # Our React frontend service
   frontend:

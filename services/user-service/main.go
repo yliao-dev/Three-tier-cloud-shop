@@ -45,6 +45,7 @@ func main() {
     // The handlers are now methods of the Env struct
 	http.HandleFunc("/api/users/health", env.healthCheckHandler)
 	http.HandleFunc("/api/register", env.registerHandler)
+	http.HandleFunc("/api/login", env.loginHandler)
 
 	log.Println("User service starting on port 8081...")
 	if err := http.ListenAndServe(":8081", nil); err != nil {
