@@ -87,7 +87,7 @@ func (env *Env) loginHandler(w http.ResponseWriter, r *http.Request) {
 		Subject: storedUser.Email,
 		ExpiresAt: jwt.NewNumericDate(expirationTime),
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	jwtSecret := os.Getenv("JWT_SECRET")
 	tokenString, err := token.SignedString([]byte(jwtSecret))
 	if err != nil {
