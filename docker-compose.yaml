@@ -1,6 +1,6 @@
 # Define the services (containers) that make up our app
 services:
-  # Our Go backend service
+  # Go backend service
   user-service:
     build:
       # Path to the Dockerfile for this service
@@ -16,6 +16,22 @@ services:
       # into the user-service container.
       - MONGO_URI=${MONGO_URI}
       - JWT_SECRET=${JWT_SECRET}
+
+  catalog-service:
+    build:
+      # Path to the Dockerfile for this service
+      context: ./services/catalog-service
+    ports:
+      # Map port 8082 on the host to 8082 in the container
+      - "8082:8082"
+    volumes:
+      - ./services/catalog-service:/app
+
+    environment:
+      # This 'environment' section injects the variable from the .env file
+      # into the catalog-service container.
+      - MONGO_URI=${MONGO_URI}
+      # - JWT_SECRET=${JWT_SECRET}
 
   # Our React frontend service
   frontend:
