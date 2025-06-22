@@ -1,0 +1,26 @@
+# Define the services (containers) that make up our app
+services:
+  # Our Go backend service
+  user-service:
+    build:
+      # Path to the Dockerfile for this service
+      context: ./services/user-service
+    ports:
+      # Map port 8081 on the host to 8081 in the container
+      - "8081:8081"
+
+  # Our React frontend service
+  frontend:
+    build:
+      # Path to the Dockerfile for this service
+      context: ./frontend
+    ports:
+      # Map port 5173 on the host to 5173 in the container
+      - "5173:5173"
+    volumes:
+      # Sync our local code into the container for live-reloading
+      # This allows changes in your editor to be reflected instantly
+      - ./frontend:/app
+      # An "anonymous volume" to prevent our local node_modules from
+      # overwriting the one installed inside the container.
+      - /app/node_modules
