@@ -8,6 +8,13 @@ services:
     ports:
       # Map port 8081 on the host to 8081 in the container
       - "8081:8081"
+    volumes:
+      - ./services/user-service:/app
+
+    environment:
+      # This 'environment' section injects the variable from the .env file
+      # into the user-service container.
+      - MONGO_URI=${MONGO_URI}
 
   # Our React frontend service
   frontend:
@@ -24,3 +31,5 @@ services:
       # An "anonymous volume" to prevent our local node_modules from
       # overwriting the one installed inside the container.
       - /app/node_modules
+    depends_on:
+      - user-service
