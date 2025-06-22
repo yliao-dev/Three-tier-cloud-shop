@@ -10,6 +10,7 @@ import { jwtDecode } from "jwt-decode";
 interface AuthContextType {
   token: string | null;
   user: { email: string } | null;
+  isLoading: boolean; // Add isLoading state
   login: (token: string) => void;
   logout: () => void;
 }
@@ -21,15 +22,16 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.getItem("authToken")
   );
   const [user, setUser] = useState<{ email: string } | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // Initialize isLoading to true
 
   useEffect(() => {
+    setIsLoading(true); // Start loading when token changes
     if (token) {
       try {
         const decoded: { sub: string } = jwtDecode(token);
         setUser({ email: decoded.sub });
         localStorage.setItem("authToken", token);
       } catch (error) {
-        // Handle cases where token is invalid or expired on load
         setToken(null);
         setUser(null);
         localStorage.removeItem("authToken");
@@ -38,18 +40,15 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
       localStorage.removeItem("authToken");
     }
+    setIsLoading(false); // Finish loading after checking token
   }, [token]);
 
-  const login = (newToken: string) => {
-    setToken(newToken);
-  };
-
-  const logout = () => {
-    setToken(null);
-  };
+  // ... (login and logout functions remain the same)
+  const login = (newToken: string) => setToken(newToken);
+  const logout = () => setToken(null);
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout }}>
+    <AuthContext.Provider value={{ token, user, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -63,5 +62,4 @@ export function useAuth() {
   return context;
 }
 
-// Default export for the AuthProvider component
 export default AuthProvider;
