@@ -6,16 +6,16 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      // Any request starting with /api will be proxied
-      "/api": {
-        // Forward the request to our user-service container
-        // We use the service name 'user-service' from docker-compose.yaml
-        target: "http://user-service:8081",
-        changeOrigin: true,
-      },
-      // Requests to /api/products... go to the catalog-service on port 8082
+      // Rule 1: Most specific routes go first.
+      // Requests to /api/products are sent to the catalog-service.
       "/api/products": {
         target: "http://catalog-service:8082",
+        changeOrigin: true,
+      },
+      // Rule 2: More general routes go last.
+      // Any other request starting with /api is sent to the user-service.
+      "/api": {
+        target: "http://user-service:8081",
         changeOrigin: true,
       },
     },
