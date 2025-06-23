@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "../context/AuthContext"; // 1. Import useAuth
 
 interface Product {
   id: string;
@@ -22,33 +23,38 @@ const ProductCatalogPage = () => {
     queryFn: fetchProducts,
   });
 
-  // This new function handles the "Add to Cart" button click
+  // 2. Get the token from the authentication context
+  const { token } = useAuth();
+
   const handleAddToCart = async (productId: string) => {
+    // 3. Check if the user is logged in before making the request
+    if (!token) {
+      alert("You must be logged in to add items to your cart.");
+      // In a real app, you might redirect to login: navigate("/login");
+      return;
+    }
+
     try {
       const response = await fetch("/api/cart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          // 4. Include the JWT in the Authorization header
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           productId: productId,
-          quantity: 1, // Add one item at a time
+          quantity: 1,
         }),
       });
 
       if (!response.ok) {
-        // If the server returns an error, throw an error to be caught below
         throw new Error("Failed to add item to cart.");
       }
 
-      // On success, show a confirmation message
       alert(`Product ${productId} added to cart!`);
     } catch (err) {
-      if (err instanceof Error) {
-        alert(err.message);
-      } else {
-        alert("An unknown error occurred.");
-      }
+      alert(err instanceof Error ? err.message : "An unknown error occurred.");
     }
   };
 
@@ -82,8 +88,6 @@ const ProductCatalogPage = () => {
             <p>
               <small>SKU: {product.sku}</small>
             </p>
-
-            {/* Add the button here, calling the handler with the product's SKU */}
             <button onClick={() => handleAddToCart(product.sku)}>
               Add to Cart
             </button>

@@ -23,7 +23,11 @@ const HomePage = () => {
           <p>
             You are logged in as: <strong>{user.email}</strong>
           </p>
-          <button onClick={logout}>Logout</button>
+          <nav style={{ display: "flex", gap: "1rem" }}>
+            <Link to="/dashboard">Dashboard</Link>
+            <Link to="/cart">View Cart</Link> {/* Add this link */}
+            <button onClick={logout}>Logout</button>
+          </nav>
         </div>
       ) : (
         // This view is shown IF there is no user

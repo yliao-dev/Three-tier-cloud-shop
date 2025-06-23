@@ -13,6 +13,7 @@ import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage";
 import ProductCatalogPage from "./pages/ProductCatalogPage";
+import CartPage from "./pages/CartPage";
 
 const App = () => {
   const router = createBrowserRouter(
@@ -28,7 +29,7 @@ const App = () => {
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="dashboard" element={<DashboardPage />} />
-          {/* Add other protected routes here in the future */}
+          <Route path="cart" element={<CartPage />} />
         </Route>
       </Route>
     )
