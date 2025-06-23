@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export type CartData = {
   [sku: string]: string;
@@ -9,6 +10,7 @@ export type CartData = {
 export const useCart = () => {
   const { token } = useAuth();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   // --- Query for fetching the cart ---
   const {
@@ -70,6 +72,33 @@ export const useCart = () => {
     },
   });
 
+  const checkoutMutation = useMutation({
+    mutationFn: async (cartContents: CartData) => {
+      if (!token) throw new Error("You must be logged in to checkout.");
+
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ items: cartContents }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Checkout failed.");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      alert("Checkout successful! Your order is being processed.");
+      // Invalidate both cart and product queries if needed, for now just cart
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      navigate("/"); // Redirect to home page
+    },
+    onError: (err) => alert(err.message),
+  });
+
   // Expose the state and functions to the components that use this hook
   return {
     cart,
@@ -77,5 +106,7 @@ export const useCart = () => {
     error,
     addItem: addItemMutation.mutate,
     removeItem: removeItemMutation.mutate,
+    checkout: checkoutMutation.mutate,
+    isCheckingOut: checkoutMutation.isPending,
   };
 };

@@ -17,7 +17,13 @@ const fetchProducts = async (): Promise<Product[]> => {
 
 const CartPage = () => {
   // Use our custom hook to get all cart data and functions
-  const { cart, isLoading: isCartLoading, removeItem } = useCart();
+  const {
+    cart,
+    isLoading: isCartLoading,
+    removeItem,
+    checkout,
+    isCheckingOut,
+  } = useCart();
   // We still need to fetch all products to display their details
   const { data: products, isLoading: areProductsLoading } = useQuery<Product[]>(
     {
@@ -77,6 +83,9 @@ const CartPage = () => {
             </tbody>
           </table>
           <h3>Grand Total: ${grandTotal.toFixed(2)}</h3>
+          <button onClick={() => checkout(cart)}>
+            {isCheckingOut ? "Processing..." : "Proceed to Checkout"}
+          </button>
         </>
       ) : (
         <p>Your cart is empty.</p>
