@@ -48,7 +48,6 @@ func main() {
 	http.HandleFunc("/api/login", env.loginHandler)
 
 	log.Println("User service starting on port 8081...")
-	log.Printf("******* Test Air HotLoad *******")
 
 	if err := http.ListenAndServe(":8081", nil); err != nil {
 		log.Fatalf("Could not start user service: %s\n", err)
