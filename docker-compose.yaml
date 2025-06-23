@@ -42,6 +42,7 @@ services:
     environment:
       # This points to the redis service defined below
       - REDIS_ADDR=redis:6379
+      - JWT_SECRET=${JWT_SECRET}
     depends_on:
       - redis
 
