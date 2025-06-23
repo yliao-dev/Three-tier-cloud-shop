@@ -46,6 +46,12 @@ services:
     depends_on:
       - redis
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672" # Port for application connections (AMQP protocol)
+      - "15672:15672" # Port for the web management UI
+
   # The Redis service (already added)
   redis:
     image: redis:7-alpine
