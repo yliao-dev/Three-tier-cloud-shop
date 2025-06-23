@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "../context/AuthContext"; // 1. Import useAuth
+import { useCart } from "../hooks/useCart"; // Import the custom hook
 
 interface Product {
   id: string;
@@ -11,60 +11,22 @@ interface Product {
 
 const fetchProducts = async (): Promise<Product[]> => {
   const response = await fetch("/api/products");
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
+  if (!response.ok) throw new Error("Network response was not ok");
   return response.json();
 };
 
 const ProductCatalogPage = () => {
+  // Fetching products remains the same
   const { data, error, isLoading } = useQuery<Product[]>({
     queryKey: ["products"],
     queryFn: fetchProducts,
   });
 
-  // 2. Get the token from the authentication context
-  const { token } = useAuth();
+  // Use our new custom hook to get the addItem function
+  const { addItem } = useCart();
 
-  const handleAddToCart = async (productId: string) => {
-    // 3. Check if the user is logged in before making the request
-    if (!token) {
-      alert("You must be logged in to add items to your cart.");
-      // In a real app, you might redirect to login: navigate("/login");
-      return;
-    }
-
-    try {
-      const response = await fetch("/api/cart", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // 4. Include the JWT in the Authorization header
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          productId: productId,
-          quantity: 1,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to add item to cart.");
-      }
-
-      alert(`Product ${productId} added to cart!`);
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "An unknown error occurred.");
-    }
-  };
-
-  if (isLoading) {
-    return <div>Loading products...</div>;
-  }
-
-  if (error) {
-    return <div>Error fetching products: {error.message}</div>;
-  }
+  if (isLoading) return <div>Loading products...</div>;
+  if (error) return <div>Error fetching products: {error.message}</div>;
 
   return (
     <div className="card">
@@ -88,9 +50,8 @@ const ProductCatalogPage = () => {
             <p>
               <small>SKU: {product.sku}</small>
             </p>
-            <button onClick={() => handleAddToCart(product.sku)}>
-              Add to Cart
-            </button>
+            {/* The button now calls the 'addItem' function from the hook */}
+            <button onClick={() => addItem(product.sku)}>Add to Cart</button>
           </div>
         ))}
       </div>

@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "../context/AuthContext";
+import { useCart } from "../hooks/useCart"; // Import the custom hook
 
-// Type for the product data from the catalog-service
 interface Product {
   id: string;
   name: string;
@@ -10,12 +9,6 @@ interface Product {
   sku: string;
 }
 
-// Type for the cart data from the cart-service (a map of SKU -> quantity)
-type CartData = {
-  [sku: string]: string;
-};
-
-// Fetch function for the product catalog
 const fetchProducts = async (): Promise<Product[]> => {
   const response = await fetch("/api/products");
   if (!response.ok) throw new Error("Network response was not ok");
@@ -23,26 +16,9 @@ const fetchProducts = async (): Promise<Product[]> => {
 };
 
 const CartPage = () => {
-  const { token } = useAuth();
-
-  // Fetch function for the user's cart
-  const fetchCart = async (): Promise<CartData> => {
-    if (!token) throw new Error("Authentication token not found.");
-    const response = await fetch("/api/cart", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!response.ok) throw new Error("Failed to fetch cart data.");
-    return response.json();
-  };
-
-  // 1. First query: fetch the user's cart (SKUs and quantities)
-  const { data: cartData, isLoading: isCartLoading } = useQuery<CartData>({
-    queryKey: ["cart"],
-    queryFn: fetchCart,
-    enabled: !!token,
-  });
-
-  // 2. Second query: fetch all product details
+  // Use our custom hook to get all cart data and functions
+  const { cart, isLoading: isCartLoading, removeItem } = useCart();
+  // We still need to fetch all products to display their details
   const { data: products, isLoading: areProductsLoading } = useQuery<Product[]>(
     {
       queryKey: ["products"],
@@ -50,26 +26,23 @@ const CartPage = () => {
     }
   );
 
-  // 3. Handle combined loading state
   if (isCartLoading || areProductsLoading) return <div>Loading Cart...</div>;
+  if (!cart || !products) return <div>Could not load cart data.</div>;
 
-  // Combine the two data sources to create a detailed cart view
-  const cartItems = cartData ? Object.entries(cartData) : [];
+  const cartItems = Object.entries(cart);
   let grandTotal = 0;
-
   const detailedCartItems = cartItems.map(([sku, quantityStr]) => {
-    const product = products?.find((p) => p.sku === sku);
+    const product = products.find((p) => p.sku === sku);
     const quantity = parseInt(quantityStr, 10);
     const price = product ? product.price : 0;
     const lineTotal = price * quantity;
     grandTotal += lineTotal;
-
     return {
-      sku: sku,
-      name: product ? product.name : "Product not found",
-      quantity: quantity,
-      price: price,
-      lineTotal: lineTotal,
+      sku,
+      name: product?.name || "Product not found",
+      quantity,
+      price,
+      lineTotal,
     };
   });
 
@@ -85,6 +58,7 @@ const CartPage = () => {
                 <th>Quantity</th>
                 <th>Unit Price</th>
                 <th>Total</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -94,6 +68,10 @@ const CartPage = () => {
                   <td>{item.quantity}</td>
                   <td>${item.price.toFixed(2)}</td>
                   <td>${item.lineTotal.toFixed(2)}</td>
+                  <td>
+                    {/* The button now calls the 'removeItem' function from the hook */}
+                    <button onClick={() => removeItem(item.sku)}>Remove</button>
+                  </td>
                 </tr>
               ))}
             </tbody>
