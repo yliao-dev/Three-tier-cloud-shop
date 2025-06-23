@@ -1,40 +1,25 @@
 services:
   # --- Backend API Services ---
   user-service:
-    build:
-      # Path to the Dockerfile for this service
-      context: ./services/user-service
-    ports:
-      # Map port 8081 on the host to 8081 in the container
-      - "8081:8081"
-    volumes:
-      - ./services/user-service:/app
-
+    build: ./services/user-service
+    ports: ["8081:8081"]
+    volumes: ["./services/user-service:/app"]
     environment:
-      # This 'environment' section injects the variable from the .env file
-      # into the user-service container.
       - MONGO_URI=${MONGO_URI}
       - JWT_SECRET=${JWT_SECRET}
 
   catalog-service:
-    build:
-      context: ./services/catalog-service
-    ports:
-      - "8082:8082"
-    volumes:
-      - ./services/catalog-service:/app
-
+    build: ./services/catalog-service
+    ports: ["8082:8082"]
+    volumes: ["./services/catalog-service:/app"]
     environment:
       - MONGO_URI=${MONGO_URI}
 
   cart-service:
     build: ./services/cart-service
-    ports:
-      - "8083:8083"
-    volumes:
-      - ./services/cart-service:/app
+    ports: ["8083:8083"]
+    volumes: ["./services/cart-service:/app"]
     environment:
-      # This points to the redis service defined below
       - REDIS_ADDR=redis:6379
       - JWT_SECRET=${JWT_SECRET}
     depends_on:
@@ -42,55 +27,44 @@ services:
 
   checkout-service:
     build: ./services/checkout-service
-    ports:
-      - "8084:8084"
-    volumes:
-      - ./services/checkout-service:/app
-    restart: on-failure
+    ports: ["8084:8084"]
+    volumes: ["./services/checkout-service:/app"]
     environment:
       - AMQP_URL=amqp://guest:guest@rabbitmq:5672/
       - JWT_SECRET=${JWT_SECRET}
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
 
   # --- Backend Worker Services ---
   notification-service:
     build: ./services/notification-service
-    volumes:
-      - ./services/notification-service:/app
+    volumes: ["./services/notification-service:/app"]
     environment:
       - AMQP_URL=amqp://guest:guest@rabbitmq:5672/
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
 
   # --- Infrastructure ---
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    ports:
-      - "5672:5672" # Port for application connections (AMQP protocol)
-      - "15672:15672" # Port for the web management UI
+    ports: ["5672:5672", "15672:15672"]
+    healthcheck: # Add this healthcheck block
+      test: ["CMD", "rabbitmq-diagnostics", "check_running", "-q"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # The Redis service (already added)
   redis:
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
+    ports: ["6379:6379"]
 
   # --- Frontend Service ---
   frontend:
-    build:
-      # Path to the Dockerfile for this service
-      context: ./frontend
-    ports:
-      # Map port 5173 on the host to 5173 in the container
-      - "5173:5173"
-    volumes:
-      # Sync our local code into the container for live-reloading
-      # This allows changes in your editor to be reflected instantly
-      - ./frontend:/app
-      # An "anonymous volume" to prevent our local node_modules from
-      # overwriting the one installed inside the container.
-      - /app/node_modules
+    build: ./frontend
+    ports: ["5173:5173"]
+    volumes: ["./frontend:/app", "/app/node_modules"]
     depends_on:
       - user-service
       - catalog-service
