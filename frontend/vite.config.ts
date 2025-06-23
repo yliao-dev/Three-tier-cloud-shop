@@ -17,6 +17,11 @@ export default defineConfig({
         changeOrigin: true,
       },
 
+      "/api/checkout": {
+        target: "http://checkout-service:8084",
+        changeOrigin: true,
+      },
+
       //2: More general routes go last.
       // Any other request starting with /api is sent to the user-service.
       "/api": {

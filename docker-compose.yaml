@@ -87,3 +87,6 @@ services:
       - /app/node_modules
     depends_on:
       - user-service
+      - catalog-service
+      - cart-service
+      - checkout-service
