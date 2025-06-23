@@ -83,7 +83,7 @@ func main() {
 	failOnError(err, "Failed to register a consumer")
 
 	// 6. Start a Go routine to process messages indefinitely.
-	var forever chan struct{}
+	forever := make(chan struct{})
 	go func() {
 		for d := range msgs {
 			var order OrderMessage
