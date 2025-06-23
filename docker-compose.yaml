@@ -46,6 +46,16 @@ services:
       rabbitmq:
         condition: service_healthy
 
+  payment-service:
+    build: ./services/payment-service
+    volumes:
+      - ./services/payment-service:/app
+    environment:
+      - AMQP_URL=amqp://guest:guest@rabbitmq:5672/
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
   # --- Infrastructure ---
   rabbitmq:
     image: rabbitmq:3-management-alpine
