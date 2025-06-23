@@ -6,13 +6,18 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      // Rule 1: Most specific routes go first.
-      // Requests to /api/products are sent to the catalog-service.
+      // 1: Most specific routes go first.
       "/api/products": {
         target: "http://catalog-service:8082",
         changeOrigin: true,
       },
-      // Rule 2: More general routes go last.
+
+      "/api/cart": {
+        target: "http://cart-service:8083",
+        changeOrigin: true,
+      },
+
+      //2: More general routes go last.
       // Any other request starting with /api is sent to the user-service.
       "/api": {
         target: "http://user-service:8081",

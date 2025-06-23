@@ -33,7 +33,25 @@ services:
       - MONGO_URI=${MONGO_URI}
       # - JWT_SECRET=${JWT_SECRET}
 
-  # Our React frontend service
+  cart-service:
+    build: ./services/cart-service
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./services/cart-service:/app
+    environment:
+      # This points to the redis service defined below
+      - REDIS_ADDR=redis:6379
+    depends_on:
+      - redis
+
+  # The Redis service (already added)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  #  React frontend service
   frontend:
     build:
       # Path to the Dockerfile for this service
