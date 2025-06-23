@@ -54,6 +54,21 @@ func (env *Env) cartHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(cartItems)
 
+	case http.MethodDelete: // Add this new case
+		var item RemoveItemRequest
+		if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
+			http.Error(w, "Invalid request body", http.StatusBadRequest)
+			return
+		}
+		// HDEL removes the specified field (the product) from the hash.
+		err := env.rdb.HDel(context.Background(), cartKey, item.ProductID).Err()
+		if err != nil {
+			log.Printf("Failed to remove item from cart for user %s: %v", userEmail, err)
+			http.Error(w, "Failed to update cart", http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+		
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}

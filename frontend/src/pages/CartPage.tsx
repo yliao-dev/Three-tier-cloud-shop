@@ -1,65 +1,105 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
 
-// The data returned from our Redis HGETALL is a map of strings
+// Type for the product data from the catalog-service
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  sku: string;
+}
+
+// Type for the cart data from the cart-service (a map of SKU -> quantity)
 type CartData = {
-  [productId: string]: string;
+  [sku: string]: string;
+};
+
+// Fetch function for the product catalog
+const fetchProducts = async (): Promise<Product[]> => {
+  const response = await fetch("/api/products");
+  if (!response.ok) throw new Error("Network response was not ok");
+  return response.json();
 };
 
 const CartPage = () => {
-  // Get the token from our auth context to make an authenticated request
   const { token } = useAuth();
 
-  // This async function will be called by react-query
+  // Fetch function for the user's cart
   const fetchCart = async (): Promise<CartData> => {
-    // If there's no token, we can't fetch a user-specific cart
-    if (!token) {
-      throw new Error("Authentication token not found.");
-    }
-
+    if (!token) throw new Error("Authentication token not found.");
     const response = await fetch("/api/cart", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch cart data.");
-    }
+    if (!response.ok) throw new Error("Failed to fetch cart data.");
     return response.json();
   };
 
-  const { data, error, isLoading } = useQuery<CartData>({
-    queryKey: ["cart"], // Unique key for this query
+  // 1. First query: fetch the user's cart (SKUs and quantities)
+  const { data: cartData, isLoading: isCartLoading } = useQuery<CartData>({
+    queryKey: ["cart"],
     queryFn: fetchCart,
-    enabled: !!token, // The query will only run if a token exists
+    enabled: !!token,
   });
 
-  if (isLoading) return <div>Loading Cart...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  // 2. Second query: fetch all product details
+  const { data: products, isLoading: areProductsLoading } = useQuery<Product[]>(
+    {
+      queryKey: ["products"],
+      queryFn: fetchProducts,
+    }
+  );
 
-  const cartItems = data ? Object.entries(data) : [];
+  // 3. Handle combined loading state
+  if (isCartLoading || areProductsLoading) return <div>Loading Cart...</div>;
+
+  // Combine the two data sources to create a detailed cart view
+  const cartItems = cartData ? Object.entries(cartData) : [];
+  let grandTotal = 0;
+
+  const detailedCartItems = cartItems.map(([sku, quantityStr]) => {
+    const product = products?.find((p) => p.sku === sku);
+    const quantity = parseInt(quantityStr, 10);
+    const price = product ? product.price : 0;
+    const lineTotal = price * quantity;
+    grandTotal += lineTotal;
+
+    return {
+      sku: sku,
+      name: product ? product.name : "Product not found",
+      quantity: quantity,
+      price: price,
+      lineTotal: lineTotal,
+    };
+  });
 
   return (
     <div className="card">
       <h2>Your Shopping Cart</h2>
-      {cartItems.length > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <th>Product SKU</th>
-              <th>Quantity</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cartItems.map(([productId, quantity]) => (
-              <tr key={productId}>
-                <td>{productId}</td>
-                <td>{quantity}</td>
+      {detailedCartItems.length > 0 ? (
+        <>
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {detailedCartItems.map((item) => (
+                <tr key={item.sku}>
+                  <td>{item.name}</td>
+                  <td>{item.quantity}</td>
+                  <td>${item.price.toFixed(2)}</td>
+                  <td>${item.lineTotal.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <h3>Grand Total: ${grandTotal.toFixed(2)}</h3>
+        </>
       ) : (
         <p>Your cart is empty.</p>
       )}
