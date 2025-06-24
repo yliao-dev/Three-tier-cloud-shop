@@ -1,0 +1,24 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  # The name for your EKS cluster
+  name: cloud-shop-cluster
+  # This MUST match the region where you pushed your ECR images
+  region: us-west-1
+  # A recent, stable Kubernetes version supported by EKS
+  version: "1.29"
+
+managedNodeGroups:
+  - name: general-workers
+    # This instance type is eligible for the AWS Free Tier
+    instanceType: t3.micro
+    # The number of servers (nodes) to start with
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    iam:
+      # This important policy grants the nodes permission to pull
+      # your images from the Amazon ECR registry.
+      withAddonPolicies:
+        imageBuilder: true
