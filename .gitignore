@@ -2,3 +2,4 @@
 
 **/tmp/
 services/catalog-service/tmp/main
+.DS_Store
