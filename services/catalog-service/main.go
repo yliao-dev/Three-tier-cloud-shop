@@ -37,9 +37,13 @@ func main() {
 
 	// 4. Create an instance of Env to hold dependencies (like the db client)
 	env := &Env{client: client}
+	mux := http.NewServeMux()
 
 	// 5. Register the handler function for your API endpoint
-	http.HandleFunc("/api/products", env.getProductsHandler)
+	mux.HandleFunc("GET /api/products", env.getProductsHandler)
+	mux.HandleFunc("GET /api/products/{id}", env.getProductByIDHandler)
+	mux.HandleFunc("POST /api/products/", env.createProductHandler)
+
 
 	// 6. Start the HTTP server on port 8082
 	log.Println("Catalog service starting on port 8082...")
