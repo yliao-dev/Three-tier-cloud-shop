@@ -1,9 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import apiClient from "../api/client"; // Import our new API client
 
-export type CartData = {
-  [sku: string]: string;
+// This should match the CartItem struct from our backend models.
+export type CartItem = {
+  productId: string;
+  quantity: number;
 };
 
 // This custom hook centralizes all cart-related logic
@@ -17,86 +20,83 @@ export const useCart = () => {
     data: cart,
     isLoading,
     error,
-  } = useQuery<CartData>({
+  } = useQuery<CartItem[]>({
     queryKey: ["cart"],
-    queryFn: async (): Promise<CartData> => {
-      if (!token) return {}; // Return empty cart if not logged in
-      const response = await fetch("/api/cart", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!response.ok) throw new Error("Failed to fetch cart data.");
-      return response.json();
+    queryFn: async (): Promise<CartItem[]> => {
+      // Use the apiClient. The '/cart' will be appended to the baseURL.
+      const response = await apiClient.get("/cart");
+      return response.data;
     },
     enabled: !!token, // Only run the query if the user is logged in
   });
 
   // --- Mutation for adding an item ---
   const addItemMutation = useMutation({
-    mutationFn: async (productId: string) => {
-      if (!token) throw new Error("You must be logged in.");
-      const response = await fetch("/api/cart", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ productId, quantity: 1 }),
-      });
-      if (!response.ok) throw new Error("Failed to add item.");
+    mutationFn: async (item: { productId: string; quantity: number }) => {
+      // Correct endpoint: POST /api/cart/items
+      return apiClient.post(`/cart/items`, item);
     },
     onSuccess: () => {
-      // When an item is added, invalidate the cart query to refetch the latest data
       queryClient.invalidateQueries({ queryKey: ["cart"] });
       alert("Product added to cart!");
     },
-    onError: (err) => alert(err.message),
+    onError: (err: any) =>
+      alert(err.response?.data?.message || "Failed to add item."),
+  });
+
+  const updateItemMutation = useMutation({
+    mutationFn: (item: { productId: string; quantity: number }) => {
+      // Correct RESTful endpoint: PUT /api/cart/items/{productId}
+      return apiClient.put(`/cart/items/${item.productId}`, {
+        quantity: item.quantity,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: (err: any) =>
+      alert(err.response?.data?.message || "Failed to update item quantity."),
   });
 
   // --- Mutation for removing an item ---
   const removeItemMutation = useMutation({
     mutationFn: async (productId: string) => {
-      if (!token) throw new Error("You must be logged in.");
-      const response = await fetch("/api/cart", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ productId }),
-      });
-      if (!response.ok) throw new Error("Failed to remove item.");
+      // Correct RESTful endpoint: DELETE /api/cart/items/{productId}
+      return apiClient.delete(`/cart/items/${productId}`);
     },
     onSuccess: () => {
-      // When an item is removed, invalidate the cart query to refetch
       queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
+    onError: (err: any) =>
+      alert(err.response?.data?.message || "Failed to remove item."),
   });
 
+  const clearCartMutation = useMutation({
+    mutationFn: () => {
+      // Correct RESTful endpoint: DELETE /api/cart
+      return apiClient.delete("/cart");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: (err: any) =>
+      alert(err.response?.data?.message || "Failed to clear cart."),
+  });
+
+  // --- Mutation for checking out ---
   const checkoutMutation = useMutation({
-    mutationFn: async (cartContents: CartData) => {
-      if (!token) throw new Error("You must be logged in to checkout.");
-
-      const response = await fetch("/api/checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ items: cartContents }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Checkout failed.");
-      }
-      return response.json();
+    mutationFn: async () => {
+      // Correct endpoint: POST /api/checkout with an empty body.
+      // The backend now orchestrates getting the cart, payment, etc.
+      return apiClient.post("/checkout");
     },
     onSuccess: () => {
       alert("Checkout successful! Your order is being processed.");
-      // Invalidate both cart and product queries if needed, for now just cart
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-      navigate("/"); // Redirect to home page
+      queryClient.invalidateQueries({ queryKey: ["cart"] }); // Refetch the (now empty) cart
+      navigate("/");
     },
-    onError: (err) => alert(err.message),
+    onError: (err: any) =>
+      alert(err.response?.data?.message || "Checkout failed."),
   });
 
   // Expose the state and functions to the components that use this hook
@@ -104,9 +104,17 @@ export const useCart = () => {
     cart,
     isLoading,
     error,
-    addItem: addItemMutation.mutate,
+    addItem: (productId: string) =>
+      addItemMutation.mutate({ productId, quantity: 1 }), // Simplified interface
     removeItem: removeItemMutation.mutate,
+    updateItem: updateItemMutation.mutate,
+    clearCart: clearCartMutation.mutate,
     checkout: checkoutMutation.mutate,
+
+    isAddingItem: addItemMutation.isPending,
+    isRemovingItem: removeItemMutation.isPending,
+    isUpdatingItem: updateItemMutation.isPending,
+    isClearingCart: clearCartMutation.isPending,
     isCheckingOut: checkoutMutation.isPending,
   };
 };
