@@ -15,11 +15,6 @@ import (
 
 // getProductsHandler fetches all products from the database.
 func (env *Env) getProductsHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	// An empty filter `bson.D{}` will match all documents in the collection.
 	cursor, err := env.collection.Find(context.TODO(), bson.D{})
 	if err != nil {
@@ -51,10 +46,6 @@ func (env *Env) getProductsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (env *Env) getProductByIDHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
 	// Get the ID from the URL path.
 	productIDString := r.PathValue("id")
 	objID, err := primitive.ObjectIDFromHex(productIDString)
@@ -89,11 +80,6 @@ func (env *Env) getProductByIDHandler(w http.ResponseWriter, r *http.Request) {
 
 
 func (env *Env) createProductHandler(w http.ResponseWriter, r *http.Request) {
-	if(r.Method != http.MethodPost) {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	var newProduct Product
 	err := json.NewDecoder(r.Body).Decode(&newProduct)
 	if err != nil {
@@ -130,10 +116,6 @@ func (env *Env) createProductHandler(w http.ResponseWriter, r *http.Request) {
 
 
 func (env *Env) updateProductHandler(w http.ResponseWriter, r *http.Request) {
-	if(r.Method != http.MethodPut) {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
 	ProductIDString := r.PathValue("id")
 	objID, err := primitive.ObjectIDFromHex(ProductIDString)
 	if err != nil {
@@ -181,10 +163,6 @@ func (env *Env) updateProductHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (env *Env) deleteProductHandler(w http.ResponseWriter, r *http.Request) {
-	if(r.Method != http.MethodPut) {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
 	ProductIDString := r.PathValue("id")
 	objID, err := primitive.ObjectIDFromHex(ProductIDString)
 	if err != nil {
