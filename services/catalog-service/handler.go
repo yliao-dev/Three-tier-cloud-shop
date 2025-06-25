@@ -13,11 +13,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// Env holds dependencies, making them available to handlers.
-type Env struct {
-	client *mongo.Client
-}
-
 // getProductsHandler fetches all products from the database.
 func (env *Env) getProductsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
