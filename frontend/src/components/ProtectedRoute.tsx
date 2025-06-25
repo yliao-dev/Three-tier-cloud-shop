@@ -1,11 +1,11 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuthContext } from "../context/AuthContext";
 
 const ProtectedRoute = () => {
-  const { user, isLoading } = useAuth();
+  const { user, loading } = useAuthContext();
 
   // 1. If the auth state is still loading, render a loading indicator
-  if (isLoading) {
+  if (loading) {
     return <div>Loading...</div>; // Or a spinner component
   }
 

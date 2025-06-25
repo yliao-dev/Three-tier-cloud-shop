@@ -7,22 +7,15 @@ import {
 } from "react";
 import apiClient from "../api/client";
 import { jwtDecode } from "jwt-decode"; // Import the new library
-
-interface User {
-  email: string;
-}
-
-interface AuthContextType {
-  user: User | null;
-  login: (token: string) => void;
-  logout: () => void;
-}
+import type { User } from "../types/user";
+import type { AuthContextType } from "../types/auth";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // The state now holds a User object or null
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   // This effect runs only once on initial component mount
   useEffect(() => {
@@ -39,6 +32,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("Failed to decode token on initial load", error);
       setUser(null);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -69,7 +64,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

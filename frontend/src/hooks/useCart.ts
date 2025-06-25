@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import apiClient from "../api/client"; // Import our new API client
+import apiClient from "../api/client";
+import { useAuthContext } from "../context/AuthContext";
 
 // This should match the CartItem struct from our backend models.
 export type CartItem = {
@@ -11,7 +11,7 @@ export type CartItem = {
 
 // This custom hook centralizes all cart-related logic
 export const useCart = () => {
-  const { token } = useAuth();
+  const { user } = useAuthContext();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ export const useCart = () => {
       const response = await apiClient.get("/cart");
       return response.data;
     },
-    enabled: !!token, // Only run the query if the user is logged in
+    enabled: !!user,
   });
 
   // --- Mutation for adding an item ---

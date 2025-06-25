@@ -1,13 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCart } from "../hooks/useCart"; // Import the custom hook
-
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  sku: string;
-}
+import type { Product } from "../types/product";
 
 const fetchProducts = async (): Promise<Product[]> => {
   const response = await fetch("/api/products");

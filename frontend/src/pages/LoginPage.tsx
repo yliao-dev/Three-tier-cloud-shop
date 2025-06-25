@@ -1,34 +1,17 @@
 import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const { login } = useAuth();
-  const navigate = useNavigate();
 
-  const handleLogin = async (e: FormEvent) => {
+  // Use the hook to get the login function and loading/error states
+  const { login, isLoggingIn, loginError } = useAuth();
+
+  const handleLogin = (e: FormEvent) => {
     e.preventDefault();
-    setError("");
-    try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || "Login failed");
-      }
-      login(data.token);
-      navigate("/");
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "An unknown error occurred."
-      );
-    }
+    // Call the login mutation from the hook
+    login({ email, password });
   };
 
   return (
@@ -43,6 +26,7 @@ const LoginPage = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={isLoggingIn} // Disable form while logging in
           />
         </div>
         <div>
@@ -53,11 +37,14 @@ const LoginPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={isLoggingIn}
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" disabled={isLoggingIn}>
+          {isLoggingIn ? "Logging in..." : "Login"}
+        </button>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {loginError && <p style={{ color: "red" }}>{loginError.message}</p>}
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuthContext } from "../context/AuthContext";
 
 const HomePage = () => {
   // 1. Get the current user and logout function from the global AuthContext
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthContext();
 
   return (
     <div>

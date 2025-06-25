@@ -1,9 +1,9 @@
-import { useAuth } from "../context/AuthContext";
+import { useAuthContext } from "../context/AuthContext";
 
 const DashboardPage = () => {
   // We can safely assume 'user' exists here because the ProtectedRoute
   // component would have redirected if it didn't.
-  const { user } = useAuth();
+  const { user } = useAuthContext();
 
   return (
     <div className="card">

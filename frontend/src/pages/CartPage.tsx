@@ -1,15 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCart } from "../hooks/useCart"; // We will use more functions from this hook
 import apiClient from "../api/client"; // Use our central API client
-
-// This should match the Product model from your backend
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  sku: string;
-}
+import type { Product } from "../types/product";
 
 // Updated fetch function using our apiClient
 const fetchProducts = async (): Promise<Product[]> => {
