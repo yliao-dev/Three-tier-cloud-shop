@@ -30,12 +30,15 @@ func main() {
 	env := &Env{rdb: rdb}
 
 	// Create a handler variable from our handler function
-	cartHandler := http.HandlerFunc(env.cartHandler)
+	mux := http.NewServeMux()
 
-	// Use http.Handle to apply the jwtMiddleware to the cartHandler.
-	// Now, no request can reach cartHandler without passing the middleware check.
-	http.Handle("/api/cart", jwtMiddleware(cartHandler))
+	// All cart routes are protected by the JWT middleware.
+	mux.Handle("GET /api/cart", jwtMiddleware(http.HandlerFunc(env.getCartHandler)))
+	mux.Handle("POST /api/cart/items", jwtMiddleware(http.HandlerFunc(env.addItemHandler)))
+	mux.Handle("PUT /api/cart/items/{productId}", jwtMiddleware(http.HandlerFunc(env.updateItemHandler)))
+	mux.Handle("DELETE /api/cart/items/{productId}", jwtMiddleware(http.HandlerFunc(env.removeItemHandler)))
 
+	
 	log.Println("Cart service starting on port 8083...")
 	if err := http.ListenAndServe(":8083", nil); err != nil {
 		log.Fatalf("Could not start cart service: %s\n", err)

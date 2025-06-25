@@ -1,5 +1,11 @@
 package main
 
+import "github.com/redis/go-redis/v9"
+
+
+type Env struct {
+	rdb *redis.Client
+}
 // CartItem defines the structure for an item being added to the cart.
 type CartItem struct {
 	ProductID string `json:"productId"`
