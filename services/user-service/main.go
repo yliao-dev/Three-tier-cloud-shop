@@ -44,8 +44,8 @@ func main() {
 	// --- HTTP Server Setup ---
     // The handlers are now methods of the Env struct
 	http.HandleFunc("/api/users/health", env.healthCheckHandler)
-	http.HandleFunc("/api/register", env.registerHandler)
-	http.HandleFunc("/api/login", env.loginHandler)
+	http.HandleFunc("/api/users/register", env.registerHandler)
+	http.HandleFunc("/api/users/login", env.loginHandler)
 
 	log.Println("User service starting on port 8081...")
 
