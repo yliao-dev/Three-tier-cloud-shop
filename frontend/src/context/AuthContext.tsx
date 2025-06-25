@@ -5,61 +5,81 @@ import {
   type ReactNode,
   useEffect,
 } from "react";
-import { jwtDecode } from "jwt-decode";
+import apiClient from "../api/client";
+import { jwtDecode } from "jwt-decode"; // Import the new library
+
+interface User {
+  email: string;
+}
 
 interface AuthContextType {
-  token: string | null;
-  user: { email: string } | null;
-  isLoading: boolean; // Add isLoading state
+  user: User | null;
   login: (token: string) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("authToken")
-  );
-  const [user, setUser] = useState<{ email: string } | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // Initialize isLoading to true
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  // The state now holds a User object or null
+  const [user, setUser] = useState<User | null>(null);
 
+  // This effect runs only once on initial component mount
   useEffect(() => {
-    setIsLoading(true); // Start loading when token changes
-    if (token) {
-      try {
-        const decoded: { sub: string } = jwtDecode(token);
-        setUser({ email: decoded.sub });
-        localStorage.setItem("authToken", token);
-      } catch (error) {
-        setToken(null);
-        setUser(null);
-        localStorage.removeItem("authToken");
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        // Decode the token to get user data
+        const decodedUser: User = jwtDecode(token);
+        // Set the user state
+        setUser(decodedUser);
+        // Configure axios with the token
+        apiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       }
-    } else {
+    } catch (error) {
+      console.error("Failed to decode token on initial load", error);
       setUser(null);
-      localStorage.removeItem("authToken");
     }
-    setIsLoading(false); // Finish loading after checking token
-  }, [token]);
+  }, []);
 
-  // ... (login and logout functions remain the same)
-  const login = (newToken: string) => setToken(newToken);
-  const logout = () => setToken(null);
+  const login = (token: string) => {
+    try {
+      // Persist the raw token to localStorage
+      localStorage.setItem("token", token);
+      // Decode the token to get the user object
+      const decodedUser: User = jwtDecode(token);
+      // Set the user object in our state
+      setUser(decodedUser);
+      // Set the default Authorization header for all future axios requests
+      apiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } catch (error) {
+      console.error("Failed to decode token on login", error);
+      // Ensure state is clean if decoding fails
+      logout();
+    }
+  };
+
+  const logout = () => {
+    // Clear user state
+    setUser(null);
+    // Clear token from localStorage
+    localStorage.removeItem("token");
+    // Remove the default Authorization header
+    delete apiClient.defaults.headers.common["Authorization"];
+  };
 
   return (
-    <AuthContext.Provider value={{ token, user, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export function useAuth() {
+// This custom hook remains the same, but it's now more powerful
+export const useAuthContext = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error("useAuthContext must be used within an AuthProvider");
   }
   return context;
-}
-
-export default AuthProvider;
+};
