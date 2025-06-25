@@ -90,7 +90,7 @@ func (env *Env) removeItemHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
-// updateItemHandler sets the quantity for a specific item. (This is new)
+// updateItemHandler sets the quantity for a specific item.
 // Endpoint: PUT /api/cart/items/{productId}
 func (env *Env) updateItemHandler(w http.ResponseWriter, r *http.Request) {
 	userEmail := r.Context().Value(UserEmailKey).(string)
