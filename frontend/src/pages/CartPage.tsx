@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { useCart } from "../hooks/useCart"; // Import the custom hook
+import { useCart } from "../hooks/useCart"; // We will use more functions from this hook
+import apiClient from "../api/client"; // Use our central API client
 
+// This should match the Product model from your backend
 interface Product {
   id: string;
   name: string;
@@ -9,22 +11,26 @@ interface Product {
   sku: string;
 }
 
+// Updated fetch function using our apiClient
 const fetchProducts = async (): Promise<Product[]> => {
-  const response = await fetch("/api/products");
-  if (!response.ok) throw new Error("Network response was not ok");
-  return response.json();
+  const response = await apiClient.get<Product[]>("/products");
+  return response.data;
 };
 
 const CartPage = () => {
-  // Use our custom hook to get all cart data and functions
+  // Destructure all the functions and state we now need from our custom hook
   const {
     cart,
     isLoading: isCartLoading,
     removeItem,
+    updateItem,
+    clearCart,
     checkout,
     isCheckingOut,
+    isUpdatingItem,
   } = useCart();
-  // We still need to fetch all products to display their details
+
+  // Fetch all products to display their details (name, price)
   const { data: products, isLoading: areProductsLoading } = useQuery<Product[]>(
     {
       queryKey: ["products"],
@@ -33,63 +39,103 @@ const CartPage = () => {
   );
 
   if (isCartLoading || areProductsLoading) return <div>Loading Cart...</div>;
-  if (!cart || !products) return <div>Could not load cart data.</div>;
 
-  const cartItems = Object.entries(cart);
+  // The cart is now an array, so we check its length
+  if (!cart || cart.length === 0) {
+    return (
+      <div className="card">
+        <h2>Your Shopping Cart</h2>
+        <p>Your cart is empty.</p>
+      </div>
+    );
+  }
+
+  // --- NEW: Refactored Data Transformation Logic ---
+  // This logic now correctly joins the cart array with the products array.
   let grandTotal = 0;
-  const detailedCartItems = cartItems.map(([sku, quantityStr]) => {
-    const product = products.find((p) => p.sku === sku);
-    const quantity = parseInt(quantityStr, 10);
+  const detailedCartItems = cart.map((cartItem) => {
+    const product = products?.find((p) => p.id === cartItem.productId);
     const price = product ? product.price : 0;
-    const lineTotal = price * quantity;
+    const lineTotal = price * cartItem.quantity;
     grandTotal += lineTotal;
     return {
-      sku,
+      productId: cartItem.productId,
       name: product?.name || "Product not found",
-      quantity,
-      price,
-      lineTotal,
+      quantity: cartItem.quantity,
+      price: price,
+      lineTotal: lineTotal,
     };
   });
+  // ---
 
   return (
     <div className="card">
       <h2>Your Shopping Cart</h2>
-      {detailedCartItems.length > 0 ? (
-        <>
-          <table>
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Total</th>
-                <th>Actions</th>
+      <>
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Unit Price</th>
+              <th>Total</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {detailedCartItems.map((item) => (
+              <tr key={item.productId}>
+                <td>{item.name}</td>
+                <td>
+                  {/* NEW: Buttons to update quantity */}
+                  <button
+                    onClick={() =>
+                      updateItem({
+                        productId: item.productId,
+                        quantity: item.quantity - 1,
+                      })
+                    }
+                    disabled={isUpdatingItem}
+                  >
+                    -
+                  </button>
+                  {item.quantity}
+                  <button
+                    onClick={() =>
+                      updateItem({
+                        productId: item.productId,
+                        quantity: item.quantity + 1,
+                      })
+                    }
+                    disabled={isUpdatingItem}
+                  >
+                    +
+                  </button>
+                </td>
+                <td>${item.price.toFixed(2)}</td>
+                <td>${item.lineTotal.toFixed(2)}</td>
+                <td>
+                  {/* CORRECTED: Pass the correct ID */}
+                  <button onClick={() => removeItem(item.productId)}>
+                    Remove
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {detailedCartItems.map((item) => (
-                <tr key={item.sku}>
-                  <td>{item.name}</td>
-                  <td>{item.quantity}</td>
-                  <td>${item.price.toFixed(2)}</td>
-                  <td>${item.lineTotal.toFixed(2)}</td>
-                  <td>
-                    {/* The button now calls the 'removeItem' function from the hook */}
-                    <button onClick={() => removeItem(item.sku)}>Remove</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <h3>Grand Total: ${grandTotal.toFixed(2)}</h3>
-          <button onClick={() => checkout(cart)}>
+            ))}
+          </tbody>
+        </table>
+        <h3>Grand Total: ${grandTotal.toFixed(2)}</h3>
+        <div className="cart-actions">
+          {/* NEW: Button to clear the entire cart */}
+          <button onClick={() => clearCart()} className="secondary">
+            Clear Cart
+          </button>
+          {/* CORRECTED: Checkout now takes no arguments */}
+          <button onClick={() => checkout()} disabled={isCheckingOut}>
             {isCheckingOut ? "Processing..." : "Proceed to Checkout"}
           </button>
-        </>
-      ) : (
-        <p>Your cart is empty.</p>
-      )}
+        </div>
+      </>
     </div>
   );
 };
