@@ -10,11 +10,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-// ContextKey is a custom type to avoid key collisions in context.
-type ContextKey string
-
-// UserEmailKey is the specific key we will use to store the user's email.
-const UserEmailKey ContextKey = "userEmail"
 
 func jwtMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
