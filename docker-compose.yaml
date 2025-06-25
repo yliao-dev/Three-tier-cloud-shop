@@ -14,6 +14,7 @@ services:
     volumes: ["./services/catalog-service:/app"]
     environment:
       - MONGO_URI=${MONGO_URI}
+      - JWT_SECRET=${JWT_SECRET}
 
   cart-service:
     build: ./services/cart-service
@@ -30,11 +31,15 @@ services:
     ports: ["8084:8084"]
     volumes: ["./services/checkout-service:/app"]
     environment:
-      - AMQP_URL=amqp://guest:guest@rabbitmq:5672/
+      - MONGO_URI=${MONGO_URI}
       - JWT_SECRET=${JWT_SECRET}
+      - AMQP_URL=amqp://guest:guest@rabbitmq:5672/
+
     depends_on:
       rabbitmq:
         condition: service_healthy
+      cart-service:
+        condition: service_started
 
   # --- Backend Worker Services ---
   notification-service:
@@ -48,13 +53,9 @@ services:
 
   payment-service:
     build: ./services/payment-service
+    ports: ["8085:8085"]
     volumes:
       - ./services/payment-service:/app
-    environment:
-      - AMQP_URL=amqp://guest:guest@rabbitmq:5672/
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
 
   # --- Infrastructure ---
   rabbitmq:
