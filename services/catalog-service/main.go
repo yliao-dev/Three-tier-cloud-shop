@@ -42,8 +42,9 @@ func main() {
 	// 5. Register the handler function for your API endpoint
 	mux.HandleFunc("GET /api/products", env.getProductsHandler)
 	mux.HandleFunc("GET /api/products/{id}", env.getProductByIDHandler)
-	mux.HandleFunc("POST /api/products/", env.createProductHandler)
-
+	mux.HandleFunc("POST /api/products", env.createProductHandler)
+	mux.HandleFunc("PUT /api/products/{id}", env.updateProductHandler)
+	mux.HandleFunc("DELETE /api/products/{id}", env.deleteProductHandler)
 
 	// 6. Start the HTTP server on port 8082
 	log.Println("Catalog service starting on port 8082...")

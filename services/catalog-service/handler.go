@@ -109,16 +109,9 @@ func (env *Env) createProductHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request body: "+err.Error(), http.StatusBadRequest)
 		return
 	}
-	if newProduct.Name == "" {
-		http.Error(w, "Product name is required", http.StatusBadRequest)
-		return
-	}
-	if newProduct.Price <= 0 {
-		http.Error(w, "Product price must be positive", http.StatusBadRequest)
-		return
-	}
-	if newProduct.SKU == "" {
-		http.Error(w, "Product SKU is required", http.StatusBadRequest)
+
+	if newProduct.Name == "" || newProduct.SKU == "" || newProduct.Price <= 0 {
+		http.Error(w, "Name, SKU, and a positive Price are required", http.StatusBadRequest)
 		return
 	}
 
@@ -141,5 +134,91 @@ func (env *Env) createProductHandler(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewEncoder(w).Encode(newProduct); err != nil {
 		log.Printf("Error encoding created product to JSON: %v", err)
 	}
+
+}
+
+
+func (env *Env) updateProductHandler(w http.ResponseWriter, r *http.Request) {
+	if(r.Method != http.MethodPut) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	ProductIDString := r.PathValue("id")
+	objID, err := primitive.ObjectIDFromHex(ProductIDString)
+	if err != nil {
+		http.Error(w, "Invalid product ID format", http.StatusBadRequest)
+		return
+	}
+	
+	var updatedProduct Product 
+	if err := json.NewDecoder(r.Body).Decode(&updatedProduct); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+	if updatedProduct.Name == "" || updatedProduct.SKU == "" || updatedProduct.Price <= 0 {
+		http.Error(w, "Name, SKU, and a positive Price are required", http.StatusBadRequest)
+		return
+	}
+
+	collection := env.client.Database("cloud_shop").Collection("products")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+
+	// Define the filter to find the document to replace.
+	filter := bson.M{"_id": objID}
+
+	result, err := collection.ReplaceOne(ctx, filter, updatedProduct)
+	if err != nil {
+		log.Printf("Error updating product: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	// If MatchedCount is 0, it means no document with that ID was found.
+	if result.MatchedCount == 0 {
+		http.Error(w, "Product not found", http.StatusNotFound)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+    
+    // Set the ID on the returned object since the decoded one won't have it.
+    updatedProduct.ID = objID
+	if err := json.NewEncoder(w).Encode(updatedProduct); err != nil {
+		log.Printf("Error encoding updated product to JSON: %v", err)
+	}
+
+}
+
+func (env *Env) deleteProductHandler(w http.ResponseWriter, r *http.Request) {
+	if(r.Method != http.MethodPut) {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	ProductIDString := r.PathValue("id")
+	objID, err := primitive.ObjectIDFromHex(ProductIDString)
+	if err != nil {
+		http.Error(w, "Invalid product ID format", http.StatusBadRequest)
+		return
+	}
+	collection := env.client.Database("cloud_shop").Collection("products")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+
+	// Define the filter to find the document to delete.
+	filter := bson.M{"_id": objID}
+
+	result, err := collection.DeleteOne(ctx, filter)
+	if err != nil {
+		log.Printf("Error deleting product: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	if result.DeletedCount == 0 {
+		http.Error(w, "Product not found", http.StatusNotFound)
+		return
+	}
+		w.WriteHeader(http.StatusNoContent)
 
 }
