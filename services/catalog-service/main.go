@@ -9,46 +9,45 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 func main() {
-	// 1. Get the MongoDB connection string from the environment variable
 	mongoURI := os.Getenv("MONGO_URI")
 	if mongoURI == "" {
-		log.Fatal("MONGO_URI environment variable is not set")
+		log.Fatal("MONGO_URI environment variable is not set.")
 	}
-
-	// 2. Connect to MongoDB
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
+	mongoClient, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
 	if err != nil {
 		log.Fatalf("Failed to connect to MongoDB: %v", err)
 	}
-	defer client.Disconnect(ctx)
-
-	// 3. Ping the database to verify the connection
-	err = client.Ping(ctx, nil)
-	if err != nil {
-		log.Fatalf("Failed to ping MongoDB: %v", err)
+	if err := mongoClient.Ping(ctx, readpref.Primary()); err != nil {
+		log.Fatalf("Could not ping MongoDB: %v", err)
 	}
 	log.Println("Catalog service connected to MongoDB!")
 
-	// 4. Create an instance of Env to hold dependencies (like the db client)
-	env := &Env{client: client}
+	// Get a handle to the collection and create the Env for dependency injection
+	collection := mongoClient.Database("cloud_shop").Collection("products")
+	env := &Env{collection: collection}
+
 	mux := http.NewServeMux()
 
-	// 5. Register the handler function for your API endpoint
+	// --- Define Routes ---
+	// Public "read" endpoints - NO middleware
 	mux.HandleFunc("GET /api/products", env.getProductsHandler)
 	mux.HandleFunc("GET /api/products/{id}", env.getProductByIDHandler)
-	mux.HandleFunc("POST /api/products", env.createProductHandler)
-	mux.HandleFunc("PUT /api/products/{id}", env.updateProductHandler)
-	mux.HandleFunc("DELETE /api/products/{id}", env.deleteProductHandler)
 
-	// 6. Start the HTTP server on port 8082
+	// Protected "write" endpoints - WRAPPED in jwtMiddleware
+	mux.Handle("POST /api/products", jwtMiddleware(http.HandlerFunc(env.createProductHandler)))
+	mux.Handle("PUT /api/products/{id}", jwtMiddleware(http.HandlerFunc(env.updateProductHandler)))
+	mux.Handle("DELETE /api/products/{id}", jwtMiddleware(http.HandlerFunc(env.deleteProductHandler)))
+
+	// --- Start Server ---
 	log.Println("Catalog service starting on port 8082...")
-	if err := http.ListenAndServe(":8082", nil); err != nil {
+	// Correctly pass the 'mux' router to ListenAndServe
+	if err := http.ListenAndServe(":8082", mux); err != nil {
 		log.Fatalf("Could not start catalog service: %s\n", err)
 	}
 }

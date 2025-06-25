@@ -2,7 +2,6 @@ package main
 
 import "github.com/redis/go-redis/v9"
 
-
 type Env struct {
 	rdb *redis.Client
 }
@@ -16,3 +15,10 @@ type CartItem struct {
 type RemoveItemRequest struct {
 	ProductID string `json:"productId"`
 }
+
+// ContextKey is a custom type to avoid key collisions in context.
+type ContextKey string
+
+// UserEmailKey is the specific key we will use to store the user's email.
+const UserEmailKey ContextKey = "userEmail"
+

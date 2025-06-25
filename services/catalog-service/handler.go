@@ -20,10 +20,8 @@ func (env *Env) getProductsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	collection := env.client.Database("cloud_shop").Collection("products")
-
 	// An empty filter `bson.D{}` will match all documents in the collection.
-	cursor, err := collection.Find(context.TODO(), bson.D{})
+	cursor, err := env.collection.Find(context.TODO(), bson.D{})
 	if err != nil {
 		log.Printf("Error finding products: %v", err)
 		http.Error(w, "Failed to fetch products", http.StatusInternalServerError)
@@ -57,7 +55,6 @@ func (env *Env) getProductByIDHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	collection := env.client.Database("cloud_shop").Collection("product")
 	// Get the ID from the URL path.
 	productIDString := r.PathValue("id")
 	objID, err := primitive.ObjectIDFromHex(productIDString)
@@ -71,7 +68,7 @@ func (env *Env) getProductByIDHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Execute the FindOne query.
 	var product Product
-	err = collection.FindOne(ctx, filter).Decode(&product)
+	err = env.collection.FindOne(ctx, filter).Decode(&product)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			http.Error(w, "Product not found", http.StatusNotFound)
@@ -97,7 +94,6 @@ func (env *Env) createProductHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	collection:= env.client.Database("cloud_shop").Collection("products")
 	var newProduct Product
 	err := json.NewDecoder(r.Body).Decode(&newProduct)
 	if err != nil {
@@ -113,7 +109,7 @@ func (env *Env) createProductHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	insertResult, err := collection.InsertOne(ctx, newProduct)
+	insertResult, err := env.collection.InsertOne(ctx, newProduct)
 	if err != nil {
 		log.Printf("Error creating product: %v", err)
 		http.Error(w, "Failed to create product", http.StatusInternalServerError)
@@ -155,7 +151,6 @@ func (env *Env) updateProductHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	collection := env.client.Database("cloud_shop").Collection("products")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -163,7 +158,7 @@ func (env *Env) updateProductHandler(w http.ResponseWriter, r *http.Request) {
 	// Define the filter to find the document to replace.
 	filter := bson.M{"_id": objID}
 
-	result, err := collection.ReplaceOne(ctx, filter, updatedProduct)
+	result, err := env.collection.ReplaceOne(ctx, filter, updatedProduct)
 	if err != nil {
 		log.Printf("Error updating product: %v", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
@@ -196,7 +191,6 @@ func (env *Env) deleteProductHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid product ID format", http.StatusBadRequest)
 		return
 	}
-	collection := env.client.Database("cloud_shop").Collection("products")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -204,7 +198,7 @@ func (env *Env) deleteProductHandler(w http.ResponseWriter, r *http.Request) {
 	// Define the filter to find the document to delete.
 	filter := bson.M{"_id": objID}
 
-	result, err := collection.DeleteOne(ctx, filter)
+	result, err := env.collection.DeleteOne(ctx, filter)
 	if err != nil {
 		log.Printf("Error deleting product: %v", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)

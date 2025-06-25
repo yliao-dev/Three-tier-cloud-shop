@@ -43,7 +43,7 @@ func main() {
 
 
 	log.Println("Cart service starting on port 8083...")
-	if err := http.ListenAndServe(":8083", nil); err != nil {
+	if err := http.ListenAndServe(":8083", mux); err != nil {
 		log.Fatalf("Could not start cart service: %s\n", err)
 	}
 }
