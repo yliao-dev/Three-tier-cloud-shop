@@ -75,7 +75,7 @@ func (env *Env) checkoutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Helper function to call the cart-service
-func (env *Env) getCartItems(userEmail, authToken string) ([]CartItem, error) {
+func (env *Env) getCartItems(_, authToken string) ([]CartItem, error) {
 	// Service-to-service communication happens over the internal Docker network.
 	// The hostname is the service name from docker-compose.yaml.
 	req, err := http.NewRequest("GET", "http://cart-service:8083/api/cart", nil)
