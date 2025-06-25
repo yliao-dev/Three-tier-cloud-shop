@@ -118,3 +118,21 @@ func (env *Env) updateItemHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusNoContent)
 }
+
+
+// clearCartHandler deletes all items from a user's cart.
+// Endpoint: DELETE /api/cart
+func (env *Env) clearCartHandler(w http.ResponseWriter, r *http.Request) {
+	userEmail := r.Context().Value(UserEmailKey).(string)
+	cartKey := "cart:" + userEmail
+
+	// DEL deletes the entire key (the user's cart hash).
+	err := env.rdb.Del(context.Background(), cartKey).Err()
+	if err != nil {
+		log.Printf("Failed to clear cart for user %s: %v", userEmail, err)
+		http.Error(w, "Failed to update cart", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}

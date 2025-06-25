@@ -38,7 +38,10 @@ func main() {
 	mux.Handle("PUT /api/cart/items/{productId}", jwtMiddleware(http.HandlerFunc(env.updateItemHandler)))
 	mux.Handle("DELETE /api/cart/items/{productId}", jwtMiddleware(http.HandlerFunc(env.removeItemHandler)))
 
-	
+	// Called by checkout-service once payment go through
+	mux.Handle("DELETE /api/cart", jwtMiddleware(http.HandlerFunc(env.clearCartHandler)))
+
+
 	log.Println("Cart service starting on port 8083...")
 	if err := http.ListenAndServe(":8083", nil); err != nil {
 		log.Fatalf("Could not start cart service: %s\n", err)

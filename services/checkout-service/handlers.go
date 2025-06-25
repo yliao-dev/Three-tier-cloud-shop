@@ -28,17 +28,12 @@ func (env *Env) checkoutHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Cart is empty", http.StatusBadRequest)
 		return
 	}
-
-	// In a real application, you would also fetch product prices from the
-	// catalog-service here to calculate a final total. We will omit that for now.
-
-	// --- Step 2: Process Payment (a mock call for now) ---
-	// We will assume the payment-service exists and returns success.
-	// paymentSuccess, err := env.processPayment(userEmail, totalAmount)
-	// if err != nil || !paymentSuccess {
-	//     http.Error(w, "Payment failed", http.StatusServiceUnavailable)
-	//     return
-	// }
+	// --- Step 2: Process Payment ---
+	paymentSuccess, err := env.processPayment(userEmail)
+	if err != nil || !paymentSuccess {
+	    http.Error(w, "Payment failed", http.StatusServiceUnavailable)
+	    return
+	}
 
 	// --- Step 3: Create a permanent Order record in MongoDB ---
 	collection := env.mongoClient.Database("cloud_shop").Collection("orders")
@@ -68,10 +63,11 @@ func (env *Env) checkoutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// --- Step 5: Clear the user's cart ---
-	// We will implement the actual HTTP call for this later.
-	// For now, we assume it's successful.
-	// env.clearCart(userEmail, authToken)
-
+	if err := env.clearCart(authToken); err != nil {
+		// This is also a critical error to log. The user has paid and has an order,
+		// but their cart still has items in it.
+		log.Printf("CRITICAL: Order %s created but failed to clear cart: %v", newOrder.ID.Hex(), err)
+	}
 	// --- Step 6: Respond to the client with the created order ---
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated) // 201 Created is more appropriate now
@@ -136,4 +132,38 @@ func (env *Env) publishOrderCreatedEvent(order Order) error {
 			ContentType: "application/json",
 			Body:        body,
 		})
+}
+
+
+
+// --- HELPER FUNCTIONS ---
+
+// processPayment is a mock function for now.
+func (env *Env) processPayment(userEmail string) (bool, error) {
+	log.Printf("Processing payment for user %s...", userEmail)
+	// In a real system, this would make an HTTP call to the payment-service.
+	// For now, we will assume it always succeeds.
+	return true, nil
+}
+
+// clearCart calls the cart-service to delete all items.
+func (env *Env) clearCart(authToken string) error {
+	req, err := http.NewRequest("DELETE", "http://cart-service:8083/api/cart", nil)
+	if err != nil {
+		return fmt.Errorf("failed to create clear cart request: %w", err)
+	}
+	req.Header.Add("Authorization", authToken)
+
+	resp, err := env.httpClient.Do(req)
+	if err != nil {
+		return fmt.Errorf("failed to call cart service for clearing cart: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusNoContent {
+		return fmt.Errorf("cart service returned non-204 status for clear cart: %d", resp.StatusCode)
+	}
+
+	log.Println("Successfully cleared cart.")
+	return nil
 }
