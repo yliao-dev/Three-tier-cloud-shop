@@ -8,10 +8,14 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-// OrderMessage defines the structure of the message we expect to receive
+type CartItem struct {
+	ProductID string `json:"productId"`
+	Quantity  int    `json:"quantity"`
+}
+
 type OrderMessage struct {
-	UserEmail string            `json:"userEmail"`
-	Items     map[string]string `json:"items"`
+	UserEmail string     `json:"userEmail"`
+	Items     []CartItem `json:"items"`
 }
 
 // failOnError is a helper function to panic on error

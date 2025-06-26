@@ -8,9 +8,15 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
+
+type CartItem struct {
+	ProductID string `json:"productId"`
+	Quantity  int    `json:"quantity"`
+}
+
 type OrderMessage struct {
-	UserEmail string            `json:"userEmail"`
-	Items     map[string]string `json:"items"`
+	UserEmail string     `json:"userEmail"`
+	Items     []CartItem `json:"items"`
 }
 
 func failOnError(err error, msg string) {
