@@ -1,36 +1,18 @@
 import { useState, type FormEvent } from "react";
+import { useAuth } from "../hooks/useAuth"; // Import our hook
 
 const RegisterPage = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
 
-  const handleRegister = async (e: FormEvent) => {
+  // Use the hook to get the register function and its state
+  const { register, isRegistering, registerError } = useAuth();
+
+  const handleRegister = (e: FormEvent) => {
     e.preventDefault();
-    setMessage("");
-
-    try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.message || "An error occurred during registration."
-        );
-      }
-      setMessage(data.message);
-    } catch (error) {
-      if (error instanceof Error) {
-        setMessage(error.message);
-      } else {
-        setMessage("An unknown error occurred.");
-      }
-    }
+    // Call the mutation from the hook with the form data
+    register({ username, email, password });
   };
 
   return (
@@ -38,28 +20,43 @@ const RegisterPage = () => {
       <h2>User Registration</h2>
       <form onSubmit={handleRegister}>
         <div>
-          <label htmlFor="email">Email:</label>
+          <label htmlFor="register-username">Username:</label>
           <input
-            id="email"
+            id="register-username"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            disabled={isRegistering}
+          />
+        </div>
+        <div>
+          <label htmlFor="register-email">Email:</label>
+          <input
+            id="register-email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={isRegistering}
           />
         </div>
         <div>
-          <label htmlFor="password">Password:</label>
+          <label htmlFor="register-password">Password:</label>
           <input
-            id="password"
+            id="register-password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={isRegistering}
           />
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" disabled={isRegistering}>
+          {isRegistering ? "Registering..." : "Register"}
+        </button>
       </form>
-      {message && <p>{message}</p>}
+      {registerError && <p style={{ color: "red" }}>{registerError.message}</p>}
     </div>
   );
 };

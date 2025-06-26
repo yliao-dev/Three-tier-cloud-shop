@@ -22,9 +22,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        const decodedToken = jwtDecode<{ sub: string; exp: string }>(token);
+        const decodedToken = jwtDecode<{ email: string; username: string }>(
+          token
+        );
 
-        setUser({ email: decodedToken.sub, username: decodedToken.exp });
+        // Map the decoded claims to our User object
+        setUser({ email: decodedToken.email, username: decodedToken.username });
         // Set the user state
         // Configure axios with the token
         apiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;

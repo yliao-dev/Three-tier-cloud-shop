@@ -2,18 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../api/client";
 import { useAuthContext } from "../context/AuthContext"; // We will create this next
-
-// Define the shape of the data for login/registration
-interface AuthCredentials {
-  email?: string;
-  password?: string;
-  username?: string;
-}
-
-// Define the expected response from the auth endpoints
-interface AuthResponse {
-  token: string;
-}
+import type { AuthResponse, AuthCredentials } from "../types/auth";
 
 export const useAuth = () => {
   const { login: setTokenInContext } = useAuthContext();
