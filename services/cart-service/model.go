@@ -31,7 +31,7 @@ type CartItemDetail struct {
 	ProductID   string  `json:"productId"`
 	Quantity    int     `json:"quantity"`
 	Name        string  `json:"name"`
-	SKU         string  `json:"sku"`
+	SKU       	string  `json:"sku"`
 	Price       float64 `json:"price"`
 	LineTotal   float64 `json:"lineTotal"`
 }

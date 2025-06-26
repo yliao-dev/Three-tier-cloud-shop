@@ -53,6 +53,7 @@ const CartPage = () => {
     grandTotal += lineTotal;
     return {
       productId: cartItem.productId,
+      sku: cartItem.sku,
       name: product?.name || "Product not found",
       quantity: cartItem.quantity,
       price: price,
@@ -84,7 +85,7 @@ const CartPage = () => {
                   <button
                     onClick={() =>
                       updateItem({
-                        productSku: item.productId,
+                        productSku: item.sku,
                         quantity: item.quantity - 1,
                       })
                     }
@@ -96,7 +97,7 @@ const CartPage = () => {
                   <button
                     onClick={() =>
                       updateItem({
-                        productSku: item.productId,
+                        productSku: item.sku,
                         quantity: item.quantity + 1,
                       })
                     }
@@ -108,9 +109,7 @@ const CartPage = () => {
                 <td>${item.price.toFixed(2)}</td>
                 <td>${item.lineTotal.toFixed(2)}</td>
                 <td>
-                  <button onClick={() => removeItem(item.productId)}>
-                    Remove
-                  </button>
+                  <button onClick={() => removeItem(item.sku)}>Remove</button>
                 </td>
               </tr>
             ))}
