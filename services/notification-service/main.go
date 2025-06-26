@@ -4,20 +4,26 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-type CartItem struct {
-	ProductID string `json:"productId"`
-	Quantity  int    `json:"quantity"`
+type OrderItem struct {
+	ProductID string  `json:"productId"`
+	SKU       string  `json:"sku"`
+	Name      string  `json:"name"`
+	Price     float64 `json:"price"`
+	Quantity  int     `json:"quantity"`
 }
 
 type OrderMessage struct {
-	UserEmail string     `json:"userEmail"`
-	Items     []CartItem `json:"items"`
+	ID        string      `json:"id"`
+	UserEmail string      `json:"userEmail"`
+	Items     []OrderItem `json:"items"`
+	Status    string      `json:"status"`
+	CreatedAt time.Time   `json:"createdAt"`
 }
-
 // failOnError is a helper function to panic on error
 func failOnError(err error, msg string) {
 	if err != nil {

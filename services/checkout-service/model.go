@@ -16,12 +16,14 @@ type Env struct {
 	httpClient  *http.Client       // For making service-to-service HTTP calls
 }
 
-// CartItem defines the structure for an item as returned by the cart-service.
-// This struct must match the definition in the cart-service so we can correctly
-// decode the JSON response from it.
-type CartItem struct {
-	ProductID string `json:"productId"`
-	Quantity  int    `json:"quantity"`
+// CartItemFromService defines the detailed structure we expect to receive
+// for each item from the cart-service API.
+type CartItemFromService struct {
+	ProductID string  `json:"productId"`
+	Quantity  int     `json:"quantity"`
+	Name      string  `json:"name"`
+	SKU       string  `json:"sku"`
+	Price     float64 `json:"price"`
 }
 
 // Order defines the structure for an order document that will be stored in MongoDB
@@ -29,7 +31,7 @@ type CartItem struct {
 type Order struct {
 	ID        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	UserEmail string             `json:"userEmail" bson:"userEmail"`
-	Items     []CartItem         `json:"items" bson:"items"`
+	Items     []CartItemFromService         `json:"items" bson:"items"`
 	Status    string             `json:"status" bson:"status"`
 	CreatedAt time.Time          `json:"createdAt" bson:"createdAt"`
 }

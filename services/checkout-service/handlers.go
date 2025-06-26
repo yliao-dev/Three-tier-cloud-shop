@@ -75,7 +75,7 @@ func (env *Env) checkoutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Helper function to call the cart-service
-func (env *Env) getCartItems(_, authToken string) ([]CartItem, error) {
+func (env *Env) getCartItems(_, authToken string) ([]CartItemFromService, error) {
 	// Service-to-service communication happens over the internal Docker network.
 	// The hostname is the service name from docker-compose.yaml.
 	req, err := http.NewRequest("GET", "http://cart-service:8083/api/cart", nil)
@@ -98,7 +98,7 @@ func (env *Env) getCartItems(_, authToken string) ([]CartItem, error) {
 		return nil, fmt.Errorf("failed to retrieve cart data")
 	}
 
-	var cartItems []CartItem
+	var cartItems []CartItemFromService
 	if err := json.NewDecoder(resp.Body).Decode(&cartItems); err != nil {
 		log.Printf("Failed to decode cart response: %v", err)
 		return nil, fmt.Errorf("invalid response from cart service")
