@@ -12,9 +12,9 @@ import (
 // getProductDetails is a helper to call the catalog-service
 // user need to fetch accurate, most update-to-date data from catalog-service
 // like price, name
-func (env *Env) getProductDetails(productID string) (*Product, error) {
+func (env *Env) getProductDetails(productSKU string) (*Product, error) {
 	// The hostname 'catalog-service' comes from docker-compose.yaml
-	url := fmt.Sprintf("http://catalog-service:8082/api/products/sku/%s", productID)
+	url := fmt.Sprintf("http://catalog-service:8082/api/products/sku/%s", productSKU)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -59,14 +59,15 @@ func (env *Env) getCartHandler(w http.ResponseWriter, r *http.Request) {
 
 	// 2. Fetch full product details for each item from the catalog-service
 	detailedItems := make([]CartItemDetail, 0, len(cartItemsMap))
-	for productID, quantityStr := range cartItemsMap {
+	for productSKU, quantityStr := range cartItemsMap {
 		quantity, _ := strconv.Atoi(quantityStr)
+		log.Println(productSKU)
 
 		// Make a service-to-service HTTP call
-		product, err := env.getProductDetails(productID)
+		product, err := env.getProductDetails(productSKU)
 		if err != nil {
 			// If a product in the cart is not found in the catalog, log it and skip.
-			log.Printf("Could not get details for product %s: %v", productID, err)
+			log.Printf("Could not get details for product %s: %v", productSKU, err)
 			continue
 		}
 
@@ -132,7 +133,7 @@ func (env *Env) updateItemHandler(w http.ResponseWriter, r *http.Request) {
 	cartKey := "cart:" + userEmail
 	productSKU := r.PathValue("productSku")
 
-	var item CartItemDetail
+	var item UpdateItemRequest
 	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return

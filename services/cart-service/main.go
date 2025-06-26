@@ -41,8 +41,8 @@ func main() {
 	// Routes remain the same, but the getCartHandler will now be much smarter.
 	mux.Handle("GET /api/cart", jwtMiddleware(http.HandlerFunc(env.getCartHandler)))
 	mux.Handle("POST /api/cart/items", jwtMiddleware(http.HandlerFunc(env.addItemHandler)))
-	mux.Handle("PUT /api/cart/items/{productId}", jwtMiddleware(http.HandlerFunc(env.updateItemHandler)))
-	mux.Handle("DELETE /api/cart/items/{productId}", jwtMiddleware(http.HandlerFunc(env.removeItemHandler)))
+	mux.Handle("PUT /api/cart/items/{productSku}", jwtMiddleware(http.HandlerFunc(env.updateItemHandler)))
+	mux.Handle("DELETE /api/cart/items/{productSku}", jwtMiddleware(http.HandlerFunc(env.removeItemHandler)))
 	mux.Handle("DELETE /api/cart", jwtMiddleware(http.HandlerFunc(env.clearCartHandler)))
 
 	log.Println("Cart service starting on port 8083...")

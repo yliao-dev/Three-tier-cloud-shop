@@ -41,7 +41,6 @@ const CartPage = () => {
       </div>
     );
   }
-  console.log(cart);
 
   // --- NEW: Refactored Data Transformation Logic ---
   // This logic now correctly joins the cart array with the products array.

@@ -26,6 +26,10 @@ type AddItemRequest struct {
 	Quantity  int    `json:"quantity"`
 }
 
+type UpdateItemRequest struct {
+	Quantity int `json:"quantity"`
+}
+
 // CartItemDetail is the enriched structure returned to the frontend.
 type CartItemDetail struct {
 	ProductID   string  `json:"productId"`
