@@ -109,8 +109,8 @@ func (env *Env) loginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	// 2. Compare the provided password with the stored hash
 	if err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(creds.Password)); err != nil{
-		 // Passwords don't match
 		http.Error(w, "Invalid email or password", http.StatusUnauthorized)
+		return
 	}
 	// 3. Create and sign a JWT
 	expirationTime := time.Now().Add(24* time.Hour)
