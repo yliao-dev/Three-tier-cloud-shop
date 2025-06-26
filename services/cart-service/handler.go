@@ -3,75 +3,110 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 )
 
-// getCartHandler retrieves all items from the user's cart.
-// Endpoint: GET /api/cart
+// getProductDetails is a helper to call the catalog-service
+// user need to fetch accurate, most update-to-date data from catalog-service
+// like price, name
+func (env *Env) getProductDetails(productID string) (*Product, error) {
+	// The hostname 'catalog-service' comes from docker-compose.yaml
+	url := fmt.Sprintf("http://catalog-service:8082/api/products/sku/%s", productID)
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := env.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("catalog-service returned status %d", resp.StatusCode)
+	}
+
+	var product Product
+	if err := json.NewDecoder(resp.Body).Decode(&product); err != nil {
+		return nil, err
+	}
+
+	return &product, nil
+}
+
+// getCartHandler now orchestrates calls to Redis and the catalog-service.
 func (env *Env) getCartHandler(w http.ResponseWriter, r *http.Request) {
 	userEmail := r.Context().Value(UserEmailKey).(string)
 	cartKey := "cart:" + userEmail
 
-	// HGetAll returns all fields and values of the hash stored at key.
+	// 1. Get basic cart data (productID -> quantity) from Redis
 	cartItemsMap, err := env.rdb.HGetAll(context.Background(), cartKey).Result()
 	if err != nil {
-		log.Printf("Failed to get cart for user %s: %v", userEmail, err)
 		http.Error(w, "Failed to retrieve cart", http.StatusInternalServerError)
 		return
 	}
 
-	// It's good practice to return an empty list instead of null.
 	if len(cartItemsMap) == 0 {
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("[]"))
 		return
 	}
 
-	// Convert the map[string]string from Redis into a slice of CartItem structs.
-	var products []CartItem
+	// 2. Fetch full product details for each item from the catalog-service
+	detailedItems := make([]CartItemDetail, 0, len(cartItemsMap))
 	for productID, quantityStr := range cartItemsMap {
 		quantity, _ := strconv.Atoi(quantityStr)
-		products = append(products, CartItem{ProductID: productID, Quantity: quantity})
+
+		// Make a service-to-service HTTP call
+		product, err := env.getProductDetails(productID)
+		if err != nil {
+			// If a product in the cart is not found in the catalog, log it and skip.
+			log.Printf("Could not get details for product %s: %v", productID, err)
+			continue
+		}
+
+		// 3. Combine the data into our rich response object
+		detailedItems = append(detailedItems, CartItemDetail{
+			ProductID: product.ID,
+			Quantity:  quantity,
+			Name:      product.Name,
+			SKU:       product.SKU,
+			Price:     product.Price,
+			LineTotal: product.Price * float64(quantity),
+		})
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(products)
+	json.NewEncoder(w).Encode(detailedItems)
 }
 
-// addItemHandler adds an item to the cart. If the item exists, its quantity is incremented.
-// Endpoint: POST /api/cart/items
+// addItemHandler now uses the specific request struct
 func (env *Env) addItemHandler(w http.ResponseWriter, r *http.Request) {
 	userEmail := r.Context().Value(UserEmailKey).(string)
 	cartKey := "cart:" + userEmail
 
-	var item CartItem
+	var item AddItemRequest // Use the new request struct
 	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
-
-	// Validate the item data.
 	if item.ProductID == "" || item.Quantity <= 0 {
 		http.Error(w, "ProductID and a positive Quantity are required", http.StatusBadRequest)
 		return
 	}
 
-	// HIncrBy increments the number stored at field in the hash stored at key by increment.
-	// This neatly handles both adding a new item and incrementing an existing one.
 	err := env.rdb.HIncrBy(context.Background(), cartKey, item.ProductID, int64(item.Quantity)).Err()
 	if err != nil {
-		log.Printf("Failed to add item to cart for user %s: %v", userEmail, err)
 		http.Error(w, "Failed to update cart", http.StatusInternalServerError)
 		return
 	}
-
 	w.WriteHeader(http.StatusNoContent)
 }
-
 // removeItemHandler removes a specific item completely from the cart.
 // Endpoint: DELETE /api/cart/items/{productId}
 func (env *Env) removeItemHandler(w http.ResponseWriter, r *http.Request) {
@@ -97,7 +132,7 @@ func (env *Env) updateItemHandler(w http.ResponseWriter, r *http.Request) {
 	cartKey := "cart:" + userEmail
 	productID := r.PathValue("productId")
 
-	var item CartItem
+	var item CartItemDetail
 	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return

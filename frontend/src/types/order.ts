@@ -1,10 +1,10 @@
-import type { CartItem } from "./cart";
+import type { CartItemDetail } from "./cart";
 
 // Defines the final order object saved to the database
 export interface Order {
   id: string;
   userEmail: string;
-  items: CartItem[];
+  items: CartItemDetail[];
   status: string;
-  createdAt: string; // Or Date
+  createdAt: string;
 }

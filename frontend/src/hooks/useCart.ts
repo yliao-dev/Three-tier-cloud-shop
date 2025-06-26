@@ -2,12 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../api/client";
 import { useAuthContext } from "../context/AuthContext";
-
-// This should match the CartItem struct from our backend models.
-export type CartItem = {
-  productId: string;
-  quantity: number;
-};
+import type { CartItemDetail, CartItemRequest } from "../types/cart";
 
 // This custom hook centralizes all cart-related logic
 export const useCart = () => {
@@ -20,9 +15,9 @@ export const useCart = () => {
     data: cart,
     isLoading,
     error,
-  } = useQuery<CartItem[]>({
+  } = useQuery<CartItemDetail[]>({
     queryKey: ["cart"],
-    queryFn: async (): Promise<CartItem[]> => {
+    queryFn: async (): Promise<CartItemDetail[]> => {
       // Use the apiClient. The '/cart' will be appended to the baseURL.
       const response = await apiClient.get("/cart");
       return response.data;
@@ -45,7 +40,7 @@ export const useCart = () => {
   });
 
   const updateItemMutation = useMutation({
-    mutationFn: (item: { productId: string; quantity: number }) => {
+    mutationFn: (item: CartItemRequest) => {
       // Correct RESTful endpoint: PUT /api/cart/items/{productId}
       return apiClient.put(`/cart/items/${item.productId}`, {
         quantity: item.quantity,

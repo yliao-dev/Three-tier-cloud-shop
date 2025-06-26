@@ -41,6 +41,7 @@ const CartPage = () => {
       </div>
     );
   }
+  console.log(cart);
 
   // --- NEW: Refactored Data Transformation Logic ---
   // This logic now correctly joins the cart array with the products array.
@@ -107,7 +108,6 @@ const CartPage = () => {
                 <td>${item.price.toFixed(2)}</td>
                 <td>${item.lineTotal.toFixed(2)}</td>
                 <td>
-                  {/* CORRECTED: Pass the correct ID */}
                   <button onClick={() => removeItem(item.productId)}>
                     Remove
                   </button>
@@ -118,11 +118,9 @@ const CartPage = () => {
         </table>
         <h3>Grand Total: ${grandTotal.toFixed(2)}</h3>
         <div className="cart-actions">
-          {/* NEW: Button to clear the entire cart */}
           <button onClick={() => clearCart()} className="secondary">
             Clear Cart
           </button>
-          {/* CORRECTED: Checkout now takes no arguments */}
           <button onClick={() => checkout()} disabled={isCheckingOut}>
             {isCheckingOut ? "Processing..." : "Proceed to Checkout"}
           </button>

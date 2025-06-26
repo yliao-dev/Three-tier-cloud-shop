@@ -38,6 +38,7 @@ func main() {
 	// Public "read" endpoints - NO middleware
 	mux.HandleFunc("GET /api/products", env.getProductsHandler)
 	mux.HandleFunc("GET /api/products/{id}", env.getProductByIDHandler)
+	mux.HandleFunc("GET /api/products/sku/{sku}", env.getProductBySKUHandler)
 
 	// Protected "write" endpoints - WRAPPED in jwtMiddleware
 	mux.Handle("POST /api/products", jwtMiddleware(http.HandlerFunc(env.createProductHandler)))

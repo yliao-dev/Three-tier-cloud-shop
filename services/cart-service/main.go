@@ -5,42 +5,45 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/redis/go-redis/v9"
 )
 
-
 func main() {
-	// Get Redis address from environment variable, with a default for local dev
 	redisAddr := os.Getenv("REDIS_ADDR")
 	if redisAddr == "" {
-		redisAddr = "redis:6379" // Default address for docker-compose
+		redisAddr = "localhost:6379"
 	}
 
 	rdb := redis.NewClient(&redis.Options{
 		Addr: redisAddr,
 	})
 
-	// Ping Redis to verify connection
-	if _, err := rdb.Ping(context.Background()).Result(); err != nil {
+	if err := rdb.Ping(context.Background()).Err(); err != nil {
 		log.Fatalf("Could not connect to Redis: %v", err)
 	}
-	log.Println("Cart service connected to Redis!")
+	log.Println("Successfully connected to Redis!")
 
-	env := &Env{rdb: rdb}
+	// Create a shared HTTP client with a timeout for service-to-service calls.
+	httpClient := &http.Client{
+		Timeout: 5 * time.Second,
+	}
 
-	// Create a handler variable from our handler function
+	// Inject both dependencies into the Env struct.
+	env := &Env{
+		rdb:        rdb,
+		httpClient: httpClient,
+	}
+
 	mux := http.NewServeMux()
 
-	// All cart routes are protected by the JWT middleware.
+	// Routes remain the same, but the getCartHandler will now be much smarter.
 	mux.Handle("GET /api/cart", jwtMiddleware(http.HandlerFunc(env.getCartHandler)))
 	mux.Handle("POST /api/cart/items", jwtMiddleware(http.HandlerFunc(env.addItemHandler)))
 	mux.Handle("PUT /api/cart/items/{productId}", jwtMiddleware(http.HandlerFunc(env.updateItemHandler)))
 	mux.Handle("DELETE /api/cart/items/{productId}", jwtMiddleware(http.HandlerFunc(env.removeItemHandler)))
-
-	// Called by checkout-service once payment go through
 	mux.Handle("DELETE /api/cart", jwtMiddleware(http.HandlerFunc(env.clearCartHandler)))
-
 
 	log.Println("Cart service starting on port 8083...")
 	if err := http.ListenAndServe(":8083", mux); err != nil {

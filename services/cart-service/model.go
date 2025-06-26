@@ -1,24 +1,41 @@
 package main
 
-import "github.com/redis/go-redis/v9"
+import (
+	"net/http"
 
+	"github.com/redis/go-redis/v9"
+)
+
+// Env now includes an httpClient for service-to-service communication.
 type Env struct {
-	rdb *redis.Client
+	rdb        *redis.Client
+	httpClient *http.Client
 }
-// CartItem defines the structure for an item being added to the cart.
-type CartItem struct {
+
+// Product defines the structure of data we expect from the catalog-service.
+type Product struct {
+	ID    string  `json:"id"`
+	Name  string  `json:"name"`
+	Price float64 `json:"price"`
+	SKU   string  `json:"sku"`
+}
+
+// AddItemRequest is the expected body when adding an item to the cart.
+type AddItemRequest struct {
 	ProductID string `json:"productId"`
 	Quantity  int    `json:"quantity"`
 }
 
-// RemoveItemRequest defines the structure for a request to remove an item.
-type RemoveItemRequest struct {
-	ProductID string `json:"productId"`
+// CartItemDetail is the enriched structure returned to the frontend.
+type CartItemDetail struct {
+	ProductID   string  `json:"productId"`
+	Quantity    int     `json:"quantity"`
+	Name        string  `json:"name"`
+	SKU         string  `json:"sku"`
+	Price       float64 `json:"price"`
+	LineTotal   float64 `json:"lineTotal"`
 }
 
-// ContextKey is a custom type to avoid key collisions in context.
+// (The contextKey definitions remain the same)
 type ContextKey string
-
-// UserEmailKey is the specific key we will use to store the user's email.
 const UserEmailKey ContextKey = "userEmail"
-

@@ -79,6 +79,38 @@ func (env *Env) getProductByIDHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 
+// getProductBySKUHandler finds a single product by its SKU.
+func (env *Env) getProductBySKUHandler(w http.ResponseWriter, r *http.Request) {
+	// The SKU is a path parameter, just like the ID was.
+	productSKU := r.PathValue("sku")
+	if productSKU == "" {
+		http.Error(w, "SKU must be provided", http.StatusBadRequest)
+		return
+	}
+
+	// The filter now uses the "sku" field instead of "_id".
+	filter := bson.M{"sku": productSKU}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	var product Product
+	err := env.collection.FindOne(ctx, filter).Decode(&product)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			http.Error(w, "Product with that SKU not found", http.StatusNotFound)
+		} else {
+			log.Printf("Error finding product by SKU %s: %v", productSKU, err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(product)
+}
+
+
+
 func (env *Env) createProductHandler(w http.ResponseWriter, r *http.Request) {
 	var newProduct Product
 	err := json.NewDecoder(r.Body).Decode(&newProduct)
