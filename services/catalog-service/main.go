@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -30,6 +31,19 @@ func main() {
 
 	// Get a handle to the collection and create the Env for dependency injection
 	collection := mongoClient.Database("cloud_shop").Collection("products")
+
+	// Create a unique index on the "sku" field to enforce uniqueness at the database level.
+	indexModel := mongo.IndexModel{
+		Keys:    bson.M{"sku": 1}, // 1 for ascending
+		Options: options.Index().SetUnique(true),
+	}
+	_, err = collection.Indexes().CreateOne(context.Background(), indexModel)
+	if err != nil {
+		log.Fatalf("Failed to create unique index for SKU: %v", err)
+	}
+	log.Println("Unique SKU index ensured.")
+
+	
 	env := &Env{collection: collection}
 
 	mux := http.NewServeMux()

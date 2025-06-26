@@ -124,6 +124,22 @@ func (env *Env) createProductHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+
+	var existingProduct Product
+	err = env.collection.FindOne(context.TODO(), bson.M{"sku": newProduct.SKU}).Decode(&existingProduct)
+	// If FindOne returns no error, it means a product with that SKU was found.
+	if err == nil {
+		http.Error(w, "Product with this SKU already exists", http.StatusConflict) // 409 Conflict is the correct status code
+		return
+	}
+	// We expect a "document not found" error. Any other error is a server problem.
+	if err != mongo.ErrNoDocuments {
+		log.Printf("Error checking for existing SKU: %v", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
