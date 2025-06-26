@@ -95,12 +95,12 @@ func (env *Env) addItemHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
-	if item.ProductID == "" || item.Quantity <= 0 {
+	if item.ProductSKU == "" || item.Quantity <= 0 {
 		http.Error(w, "ProductID and a positive Quantity are required", http.StatusBadRequest)
 		return
 	}
 
-	err := env.rdb.HIncrBy(context.Background(), cartKey, item.ProductID, int64(item.Quantity)).Err()
+	err := env.rdb.HIncrBy(context.Background(), cartKey, item.ProductSKU, int64(item.Quantity)).Err()
 	if err != nil {
 		http.Error(w, "Failed to update cart", http.StatusInternalServerError)
 		return
@@ -112,10 +112,10 @@ func (env *Env) addItemHandler(w http.ResponseWriter, r *http.Request) {
 func (env *Env) removeItemHandler(w http.ResponseWriter, r *http.Request) {
 	userEmail := r.Context().Value(UserEmailKey).(string)
 	cartKey := "cart:" + userEmail
-	productID := r.PathValue("productId") // Get productID from URL
+	productSKU := r.PathValue("productSku") // Get productID from URL
 
 	// HDel removes the specified fields from the hash stored at key.
-	err := env.rdb.HDel(context.Background(), cartKey, productID).Err()
+	err := env.rdb.HDel(context.Background(), cartKey, productSKU).Err()
 	if err != nil {
 		log.Printf("Failed to remove item from cart for user %s: %v", userEmail, err)
 		http.Error(w, "Failed to update cart", http.StatusInternalServerError)
@@ -130,7 +130,7 @@ func (env *Env) removeItemHandler(w http.ResponseWriter, r *http.Request) {
 func (env *Env) updateItemHandler(w http.ResponseWriter, r *http.Request) {
 	userEmail := r.Context().Value(UserEmailKey).(string)
 	cartKey := "cart:" + userEmail
-	productID := r.PathValue("productId")
+	productSKU := r.PathValue("productSku")
 
 	var item CartItemDetail
 	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
@@ -140,10 +140,10 @@ func (env *Env) updateItemHandler(w http.ResponseWriter, r *http.Request) {
 
 	if item.Quantity <= 0 {
 		// If quantity is zero or less, remove the item instead.
-		env.rdb.HDel(context.Background(), cartKey, productID)
+		env.rdb.HDel(context.Background(), cartKey, productSKU)
 	} else {
 		// HSet sets the specified fields to their respective values in the hash stored at key.
-		err := env.rdb.HSet(context.Background(), cartKey, productID, item.Quantity).Err()
+		err := env.rdb.HSet(context.Background(), cartKey, productSKU, item.Quantity).Err()
 		if err != nil {
 			log.Printf("Failed to update item in cart for user %s: %v", userEmail, err)
 			http.Error(w, "Failed to update cart", http.StatusInternalServerError)

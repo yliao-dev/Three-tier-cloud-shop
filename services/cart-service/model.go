@@ -22,7 +22,7 @@ type Product struct {
 
 // AddItemRequest is the expected body when adding an item to the cart.
 type AddItemRequest struct {
-	ProductID string `json:"productId"`
+	ProductSKU string `json:"ProductSku"`
 	Quantity  int    `json:"quantity"`
 }
 

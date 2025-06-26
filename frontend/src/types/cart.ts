@@ -12,6 +12,6 @@ export interface CartItemDetail {
 
 // This type is still useful for *sending* data to the backend
 export interface CartItemRequest {
-  productId: string;
+  productSku: string;
   quantity: number;
 }

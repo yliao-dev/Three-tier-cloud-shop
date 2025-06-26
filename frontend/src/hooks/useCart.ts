@@ -27,7 +27,7 @@ export const useCart = () => {
 
   // --- Mutation for adding an item ---
   const addItemMutation = useMutation({
-    mutationFn: async (item: { productId: string; quantity: number }) => {
+    mutationFn: async (item: { productSku: string; quantity: number }) => {
       // Correct endpoint: POST /api/cart/items
       return apiClient.post(`/cart/items`, item);
     },
@@ -41,8 +41,8 @@ export const useCart = () => {
 
   const updateItemMutation = useMutation({
     mutationFn: (item: CartItemRequest) => {
-      // Correct RESTful endpoint: PUT /api/cart/items/{productId}
-      return apiClient.put(`/cart/items/${item.productId}`, {
+      // Correct RESTful endpoint: PUT /api/cart/items/{productSku}
+      return apiClient.put(`/cart/items/${item.productSku}`, {
         quantity: item.quantity,
       });
     },
@@ -55,9 +55,9 @@ export const useCart = () => {
 
   // --- Mutation for removing an item ---
   const removeItemMutation = useMutation({
-    mutationFn: async (productId: string) => {
-      // Correct RESTful endpoint: DELETE /api/cart/items/{productId}
-      return apiClient.delete(`/cart/items/${productId}`);
+    mutationFn: async (productSku: string) => {
+      // Correct RESTful endpoint: DELETE /api/cart/items/{productSku}
+      return apiClient.delete(`/cart/items/${productSku}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
@@ -99,8 +99,8 @@ export const useCart = () => {
     cart,
     isLoading,
     error,
-    addItem: (productId: string) =>
-      addItemMutation.mutate({ productId, quantity: 1 }), // Simplified interface
+    addItem: (productSku: string) =>
+      addItemMutation.mutate({ productSku, quantity: 1 }), // Simplified interface
     removeItem: removeItemMutation.mutate,
     updateItem: updateItemMutation.mutate,
     clearCart: clearCartMutation.mutate,

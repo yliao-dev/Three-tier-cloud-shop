@@ -84,7 +84,7 @@ const CartPage = () => {
                   <button
                     onClick={() =>
                       updateItem({
-                        productId: item.productId,
+                        productSku: item.productId,
                         quantity: item.quantity - 1,
                       })
                     }
@@ -96,7 +96,7 @@ const CartPage = () => {
                   <button
                     onClick={() =>
                       updateItem({
-                        productId: item.productId,
+                        productSku: item.productId,
                         quantity: item.quantity + 1,
                       })
                     }
