@@ -35,7 +35,6 @@ func (env *Env) getProductDetails(productSKU string) (*Product, error) {
 	if err := json.NewDecoder(resp.Body).Decode(&product); err != nil {
 		return nil, err
 	}
-
 	return &product, nil
 }
 
@@ -57,12 +56,11 @@ func (env *Env) getCartHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+
 	// 2. Fetch full product details for each item from the catalog-service
 	detailedItems := make([]CartItemDetail, 0, len(cartItemsMap))
 	for productSKU, quantityStr := range cartItemsMap {
 		quantity, _ := strconv.Atoi(quantityStr)
-		log.Println(productSKU)
-
 		// Make a service-to-service HTTP call
 		product, err := env.getProductDetails(productSKU)
 		if err != nil {
