@@ -1,0 +1,890 @@
+[
+  {
+    "name": "Sony Alpha a7 IV Mirrorless Camera",
+    "description": "The true hybrid powerhouse, pairing a 33MP full-frame sensor with advanced 4K 60p video. A top choice for professionals who need excellence in both stills and video.",
+    "sku": "SONY-ILCE-7M4",
+    "price": 2499.99,
+    "brand": "Sony",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Nikon Z8 Mirrorless Camera",
+    "description": "Often called a 'baby Z9', the Z8 packs a 45.7MP stacked sensor, internal 8K N-RAW video, and a blackout-free viewfinder into a more compact body. Built for demanding professionals.",
+    "sku": "NIKON-Z8",
+    "price": 3996.95,
+    "brand": "Nikon",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Leica M11 Rangefinder Camera",
+    "description": "A modern take on a legendary design. The M11 combines the classic, manual rangefinder experience with a 60MP sensor and exceptional build quality. A true photographer's camera.",
+    "sku": "LEICA-M11-BLK",
+    "price": 8995.0,
+    "brand": "Leica",
+    "category": "Rangefinder Camera"
+  },
+  {
+    "name": "Canon EOS R5 Mirrorless Camera",
+    "description": "A landmark camera known for its high-resolution 45MP sensor and groundbreaking 8K video capabilities. Its Dual Pixel AF II system is a class leader in speed and accuracy.",
+    "sku": "CANON-EOS-R5",
+    "price": 3399.0,
+    "brand": "Canon",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Hasselblad X2D 100C Medium Format Camera",
+    "description": "Experience unparalleled image quality with a 100-megapixel medium format sensor. The X2D 100C delivers stunning color, detail, and dynamic range in a surprisingly portable design.",
+    "sku": "HASS-X2D-100C",
+    "price": 8199.0,
+    "brand": "Hasselblad",
+    "category": "Medium Format Camera"
+  },
+  {
+    "name": "Fujifilm GFX 100S II Medium Format Camera",
+    "description": "Bringing medium format to more creators, the GFX 100S II features a 102MP sensor, powerful in-body stabilization, and fast autofocus in a body size comparable to a full-frame DSLR.",
+    "sku": "FUJI-GFX100SII",
+    "price": 4999.95,
+    "brand": "Fujifilm",
+    "category": "Medium Format Camera"
+  },
+  {
+    "name": "Leica Q3 Digital Camera",
+    "description": "A masterpiece of compact engineering. The Q3 features a 60MP full-frame sensor paired with a fixed, razor-sharp Summilux 28mm f/1.7 lens. The ultimate travel and street photography camera.",
+    "sku": "LEICA-Q3",
+    "price": 5995.0,
+    "brand": "Leica",
+    "category": "Point-and-Shoot"
+  },
+  {
+    "name": "Nikkor Z 50mm f/1.8 S Lens",
+    "description": "The standard prime lens for the Nikon Z system, offering exceptional sharpness, beautiful rendering, and a versatile focal length for everything from portraits to landscapes.",
+    "sku": "NIKKOR-Z50F18S",
+    "price": 626.95,
+    "brand": "Nikon",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Canon RF 24-70mm f/2.8 L IS USM Lens",
+    "description": "The essential professional zoom. This lens combines a fast f/2.8 aperture with image stabilization, delivering incredible image quality and low-light performance.",
+    "sku": "CANON-RF2470F28L",
+    "price": 2099.0,
+    "brand": "Canon",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Sony FE 85mm f/1.4 GM Lens",
+    "description": "The G Master portrait lens. Renowned for its extreme sharpness and breathtakingly smooth bokeh, this lens is a must-have for professional portrait and wedding photographers.",
+    "sku": "SONY-SEL85F14GM",
+    "price": 1798.0,
+    "brand": "Sony",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Fujifilm XF 16-55mm f/2.8 R LM WR Lens",
+    "description": "A flagship standard zoom for the X-mount system. This weather-resistant lens provides flagship image quality with a constant f/2.8 aperture.",
+    "sku": "FUJI-XF1655F28",
+    "price": 1199.0,
+    "brand": "Fujifilm",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Hasselblad XCD 4/45P Lens",
+    "description": "The world's lightest digital medium format autofocus lens. This 45mm lens provides a normal field of view and incredible image quality in an exceptionally compact package.",
+    "sku": "HASS-XCD45P",
+    "price": 1099.0,
+    "brand": "Hasselblad",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Panasonic Lumix S5 IIX Full-Frame Camera",
+    "description": "A video-focused hybrid camera with features like internal ProRes recording, live streaming capabilities, and a highly effective phase-detect autofocus system.",
+    "sku": "PANA-DC-S5M2X",
+    "price": 2197.99,
+    "brand": "Panasonic",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Sigma 35mm f/1.4 DG DN Art Lens",
+    "description": "Part of Sigma's renowned Art line, this lens offers outstanding optical performance that rivals first-party lenses, at a more accessible price point. For Sony E and L-Mount.",
+    "sku": "SIGMA-35F14-DG-DN",
+    "price": 899.0,
+    "brand": "Sigma",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Tamron 28-75mm f/2.8 Di III VXD G2 Lens",
+    "description": "A versatile and compact standard zoom for Sony E-mount cameras. The second generation model features improved optics and faster autofocus.",
+    "sku": "TAM-A063",
+    "price": 899.0,
+    "brand": "Tamron",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Nikon Zf Full-Frame Mirrorless Camera",
+    "description": "A fusion of classic, retro design and modern mirrorless technology. Features a 24.5MP sensor and dedicated dials for a tactile shooting experience.",
+    "sku": "NIKON-ZF-BODY",
+    "price": 1996.95,
+    "brand": "Nikon",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Canon RF 50mm f/1.8 STM Lens",
+    "description": "The 'nifty fifty' for the RF mount. Incredibly compact, lightweight, and affordable, this lens is a must-have for any Canon mirrorless shooter.",
+    "sku": "CANON-RF50F18",
+    "price": 199.99,
+    "brand": "Canon",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Sony Alpha a6700 APS-C Mirrorless Camera",
+    "description": "A feature-packed APS-C camera with AI-powered autofocus from Sony's high-end models, 4K 120p video, and a compact form factor.",
+    "sku": "SONY-ILCE-6700",
+    "price": 1399.99,
+    "brand": "Sony",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Fujifilm X100VI Digital Camera",
+    "description": "The highly sought-after premium compact camera, featuring a 40MP sensor, in-body image stabilization, and classic film simulation modes in a beautiful, retro body.",
+    "sku": "FUJI-X100VI-SLV",
+    "price": 1599.95,
+    "brand": "Fujifilm",
+    "category": "Point-and-Shoot"
+  },
+  {
+    "name": "Leica Summilux-M 35mm f/1.4 ASPH. Lens",
+    "description": "A legendary lens for the Leica M-system, known for its exceptional sharpness, beautiful rendering, and compact size. A masterclass in optical design.",
+    "sku": "LEICA-11726",
+    "price": 5895.0,
+    "brand": "Leica",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Nikon Z 14-24mm f/2.8 S Lens",
+    "description": "A professional ultra-wide angle zoom for the Nikon Z system. Delivers stunning edge-to-edge sharpness for landscape, architecture, and astrophotography.",
+    "sku": "NIKKOR-Z1424F28",
+    "price": 2496.95,
+    "brand": "Nikon",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Canon RF 70-200mm f/2.8 L IS USM Lens",
+    "description": "A revolutionary telephoto zoom lens that is significantly smaller and lighter than its DSLR counterparts without sacrificing image quality.",
+    "sku": "CANON-RF70200F28L",
+    "price": 2599.0,
+    "brand": "Canon",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Sony FE 16-35mm f/2.8 GM II Lens",
+    "description": "The second generation of Sony's professional wide-angle zoom, now smaller, lighter, and with even better optical performance.",
+    "sku": "SONY-SEL1635GM2",
+    "price": 2298.0,
+    "brand": "Sony",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Fujifilm X-S20 Mirrorless Camera",
+    "description": "A versatile camera aimed at content creators, featuring a large battery, a dedicated 'Vlog Mode', and a 26.1MP sensor.",
+    "sku": "FUJI-XS20",
+    "price": 1299.95,
+    "brand": "Fujifilm",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Sigma 24-70mm f/2.8 DG DN Art Lens",
+    "description": "A high-performance standard zoom lens that offers exceptional value and image quality for Sony E and L-mount systems.",
+    "sku": "SIGMA-2470F28-DG-DN",
+    "price": 1099.0,
+    "brand": "Sigma",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Panasonic Lumix GH6 Mirrorless Camera",
+    "description": "A video creator's dream, the GH6 offers a vast array of professional video formats, including 5.7K Apple ProRes, and features a built-in cooling fan for unlimited recording.",
+    "sku": "PANA-DC-GH6",
+    "price": 1697.99,
+    "brand": "Panasonic",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Tamron 70-180mm f/2.8 Di III VXD Lens",
+    "description": "A compact and lightweight telephoto zoom for Sony E-mount, providing a fast f/2.8 aperture in a more portable package than traditional 70-200mm lenses.",
+    "sku": "TAM-A056",
+    "price": 1199.0,
+    "brand": "Tamron",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Nikon Zfc APS-C Mirrorless Camera",
+    "description": "A stylish, retro-themed camera inspired by the classic Nikon FM2 film camera, featuring modern mirrorless internals and a 20.9MP sensor.",
+    "sku": "NIKON-ZFC-SLV",
+    "price": 856.95,
+    "brand": "Nikon",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Canon EOS R7 APS-C Mirrorless Camera",
+    "description": "A high-performance APS-C camera designed for wildlife and sports photographers, featuring a 32.5MP sensor, dual card slots, and advanced autofocus.",
+    "sku": "CANON-EOS-R7",
+    "price": 1499.0,
+    "brand": "Canon",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Sony Alpha a7C II Compact Full-Frame Camera",
+    "description": "Packing the 33MP sensor of the a7 IV into a much smaller, rangefinder-style body. Perfect for travelers who demand full-frame quality.",
+    "sku": "SONY-ILCE-7CM2-B",
+    "price": 2198.0,
+    "brand": "Sony",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Fujifilm XF 56mm f/1.2 R WR Lens",
+    "description": "A weather-resistant update to a classic portrait lens. This lens is renowned for its sharpness and beautiful rendering for portraiture.",
+    "sku": "FUJI-XF56F12-WR",
+    "price": 999.0,
+    "brand": "Fujifilm",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Leica SL2-S Mirrorless Camera",
+    "description": "A versatile full-frame camera for both photographers and videographers, featuring a 24.6MP sensor and robust, weather-sealed metal construction.",
+    "sku": "LEICA-SL2-S",
+    "price": 5195.0,
+    "brand": "Leica",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Nikkor Z 24-120mm f/4 S Lens",
+    "description": "An incredibly versatile 'do-it-all' travel zoom lens, offering a wide focal range with a constant f/4 aperture and excellent image quality.",
+    "sku": "NIKKOR-Z24120F4",
+    "price": 1096.95,
+    "brand": "Nikon",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Canon RF 100-500mm f/4.5-7.1 L IS USM Lens",
+    "description": "A super-telephoto zoom lens that offers an impressive reach in a relatively compact package, ideal for wildlife and sports photography.",
+    "sku": "CANON-RF100500L",
+    "price": 2699.0,
+    "brand": "Canon",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Sony FE 50mm f/1.2 GM Lens",
+    "description": "A G Master prime lens that achieves the coveted f/1.2 aperture for incredible low-light performance and subject separation, while remaining surprisingly compact.",
+    "sku": "SONY-SEL50F12GM",
+    "price": 1998.0,
+    "brand": "Sony",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Hasselblad 907X & CFV 100C Camera",
+    "description": "A modular medium format system combining a digital back with a compact camera body, offering a unique, waist-level shooting experience with modern technology.",
+    "sku": "HASS-907X-100C",
+    "price": 8199.0,
+    "brand": "Hasselblad",
+    "category": "Medium Format Camera"
+  },
+  {
+    "name": "Panasonic Lumix S 50mm f/1.8 Lens",
+    "description": "A lightweight, affordable, and high-performing standard prime lens for the L-mount system, perfect for everyday photography.",
+    "sku": "PANA-S-S50",
+    "price": 447.99,
+    "brand": "Panasonic",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Sigma 150-600mm f/5-6.3 DG DN OS Sports Lens",
+    "description": "A super-telephoto zoom for Sony E and L-mount, designed for sports and wildlife photographers who need extreme reach and fast autofocus.",
+    "sku": "SIGMA-150600-DG-DN",
+    "price": 1499.0,
+    "brand": "Sigma",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Ricoh GR IIIx Digital Camera",
+    "description": "A cult-classic street photography camera featuring a large APS-C sensor and a sharp 40mm equivalent lens in a truly pocketable body.",
+    "sku": "RICOH-GRIIX",
+    "price": 996.95,
+    "brand": "Ricoh",
+    "category": "Point-and-Shoot"
+  },
+  {
+    "name": "Tamron 35-150mm f/2-2.8 Di III VXD Lens",
+    "description": "A unique and versatile all-in-one zoom lens for Sony E-mount, covering a wide range of focal lengths with an impressively bright aperture.",
+    "sku": "TAM-A058",
+    "price": 1899.0,
+    "brand": "Tamron",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Nikon Z9 Flagship Mirrorless Camera",
+    "description": "Nikon's top-tier professional camera, featuring a 45.7MP stacked sensor, no mechanical shutter, 8K video, and a rugged, integrated-grip body.",
+    "sku": "NIKON-Z9",
+    "price": 5496.95,
+    "brand": "Nikon",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Canon RF 15-35mm f/2.8 L IS USM Lens",
+    "description": "A professional ultra-wide angle zoom for the RF mount, offering a fast f/2.8 aperture and image stabilization for sharp shots in any condition.",
+    "sku": "CANON-RF1535F28L",
+    "price": 2099.0,
+    "brand": "Canon",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Sony Alpha 1 (a1) Mirrorless Camera",
+    "description": "The ultimate flagship, combining a 50MP high-resolution sensor with blazing-fast 30fps shooting and 8K video. A camera that truly does it all.",
+    "sku": "SONY-ILCE-1",
+    "price": 6498.0,
+    "brand": "Sony",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Fujifilm XF 23mm f/1.4 R LM WR Lens",
+    "description": "A premium wide-angle prime lens for the X-mount system, updated with a new optical design, faster linear motor autofocus, and weather resistance.",
+    "sku": "FUJI-XF23F14-WR",
+    "price": 899.0,
+    "brand": "Fujifilm",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Leica M6 Film Rangefinder Camera (2022 Reissue)",
+    "description": "A faithful reissue of the legendary M6 film camera. It offers the purely mechanical, manual photography experience that generations of photographers have cherished.",
+    "sku": "LEICA-M6-2022",
+    "price": 5295.0,
+    "brand": "Leica",
+    "category": "Film Camera"
+  },
+  {
+    "name": "Nikkor Z 70-200mm f/2.8 VR S Lens",
+    "description": "The quintessential telephoto zoom for professionals using the Nikon Z system, delivering outstanding sharpness, speed, and performance.",
+    "sku": "NIKKOR-Z70200F28",
+    "price": 2696.95,
+    "brand": "Nikon",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Canon EOS R3 Mirrorless Camera",
+    "description": "A professional camera built for speed, featuring a stacked sensor, Eye Control AF, and a weather-sealed body with an integrated grip.",
+    "sku": "CANON-EOS-R3",
+    "price": 4999.0,
+    "brand": "Canon",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Sony FE 35mm f/1.4 GM Lens",
+    "description": "A compact and lightweight G Master prime that delivers exceptional resolution and beautiful bokeh, making it a favorite for a wide range of applications.",
+    "sku": "SONY-SEL35F14GM",
+    "price": 1398.0,
+    "brand": "Sony",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Hasselblad XCD 3.5/30mm Lens",
+    "description": "A high-performance wide-angle lens for the X System, providing exceptional image quality from corner to corner.",
+    "sku": "HASS-XCD30",
+    "price": 3999.0,
+    "brand": "Hasselblad",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Panasonic Lumix G9 II Mirrorless Camera",
+    "description": "A powerful Micro Four Thirds camera with advanced phase-detect autofocus, incredible in-body stabilization, and fast burst shooting.",
+    "sku": "PANA-DC-G9M2",
+    "price": 1897.99,
+    "brand": "Panasonic",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Sigma 85mm f/1.4 DG DN Art Lens",
+    "description": "A reimagined portrait prime for mirrorless systems, offering stunning Art-line image quality in a significantly smaller and lighter package.",
+    "sku": "SIGMA-85F14-DG-DN",
+    "price": 1199.0,
+    "brand": "Sigma",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Fujifilm X-H2S Mirrorless Camera",
+    "description": "A speed-focused flagship for the X-mount, featuring a stacked 26.1MP sensor capable of shooting up to 40fps and recording high-frame-rate video.",
+    "sku": "FUJI-XH2S",
+    "price": 2499.95,
+    "brand": "Fujifilm",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Nikkor Z 400mm f/2.8 TC VR S Lens",
+    "description": "A flagship super-telephoto prime lens with a built-in 1.4x teleconverter, offering incredible reach and image quality for professional sports and wildlife photographers.",
+    "sku": "NIKKOR-Z400F28TC",
+    "price": 13996.95,
+    "brand": "Nikon",
+    "category": "Telephoto Lens"
+  },
+  {
+    "name": "Canon RF 5.2mm f/2.8 L Dual Fisheye 3D VR Lens",
+    "description": "A unique lens that captures stereoscopic 3D 180° VR imagery onto a single full-frame sensor, simplifying the workflow for creating immersive content.",
+    "sku": "CANON-RF52F28L",
+    "price": 1999.0,
+    "brand": "Canon",
+    "category": "Specialty Lens"
+  },
+  {
+    "name": "Sony Alpha 7R V (a7R V) Mirrorless Camera",
+    "description": "Combining a high-resolution 61MP sensor with a new AI-powered processing unit for incredibly advanced subject recognition and autofocus tracking.",
+    "sku": "SONY-ILCE-7RM5",
+    "price": 3898.0,
+    "brand": "Sony",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Leica Summicron-M 50mm f/2 Lens",
+    "description": "The benchmark for standard prime lenses, the Summicron is celebrated for its exceptional sharpness, contrast, and compact mechanical design.",
+    "sku": "LEICA-11826",
+    "price": 2995.0,
+    "brand": "Leica",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Tamron 50-400mm f/4.5-6.3 Di III VC VXD Lens",
+    "description": "An ultra-telephoto zoom lens for Sony E-mount that starts at a standard 50mm, offering unprecedented versatility for travel and wildlife.",
+    "sku": "TAM-A067",
+    "price": 1299.0,
+    "brand": "Tamron",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Fujifilm X-H2 Mirrorless Camera",
+    "description": "The high-resolution sibling to the X-H2S, featuring a class-leading 40MP APS-C sensor for incredible detail in stills and 8K video recording.",
+    "sku": "FUJI-XH2",
+    "price": 1999.95,
+    "brand": "Fujifilm",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Nikon Z 180-600mm f/5.6-6.3 VR Lens",
+    "description": "An accessible super-telephoto zoom lens that provides immense reach for wildlife, aviation, and sports photography enthusiasts.",
+    "sku": "NIKKOR-Z180600",
+    "price": 1696.95,
+    "brand": "Nikon",
+    "category": "Telephoto Lens"
+  },
+  {
+    "name": "Canon RF 28-70mm f/2 L USM Lens",
+    "description": "A groundbreaking standard zoom lens with a constant f/2 aperture, offering the performance of multiple prime lenses in a single, professional-grade package.",
+    "sku": "CANON-RF2870F2L",
+    "price": 2999.0,
+    "brand": "Canon",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Sony FE 200-600mm f/5.6-6.3 G OSS Lens",
+    "description": "A popular super-telephoto zoom for wildlife and sports, known for its internal zoom mechanism, fast autofocus, and excellent sharpness.",
+    "sku": "SONY-SEL200600G",
+    "price": 1998.0,
+    "brand": "Sony",
+    "category": "Telephoto Lens"
+  },
+  {
+    "name": "Panasonic Lumix S1H Full-Frame Camera",
+    "description": "A Netflix-approved cinema camera in a mirrorless body, offering a wide range of recording formats, including 6K video, and robust heat management.",
+    "sku": "PANA-DC-S1H",
+    "price": 3497.99,
+    "brand": "Panasonic",
+    "category": "Cinema Camera"
+  },
+  {
+    "name": "Sigma 14-24mm f/2.8 DG DN Art Lens",
+    "description": "An ultra-wide zoom lens for mirrorless systems that delivers exceptional image quality, making it a favorite for astrophotography and architecture.",
+    "sku": "SIGMA-1424F28-DG-DN",
+    "price": 1399.0,
+    "brand": "Sigma",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Hasselblad XCD 4/21mm Lens",
+    "description": "An extreme wide-angle lens for the X System, providing a 17mm full-frame equivalent field of view with outstanding optical correction.",
+    "sku": "HASS-XCD21",
+    "price": 5199.0,
+    "brand": "Hasselblad",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Ricoh GR III Digital Camera",
+    "description": "The quintessential pocketable street photography camera, featuring a 28mm equivalent lens and a large APS-C sensor for high-quality images.",
+    "sku": "RICOH-GRIII",
+    "price": 966.95,
+    "brand": "Ricoh",
+    "category": "Point-and-Shoot"
+  },
+  {
+    "name": "Nikon D850 DSLR Camera",
+    "description": "A legendary high-resolution DSLR, revered for its 45.7MP sensor, excellent dynamic range, and robust build quality. A workhorse for many professionals.",
+    "sku": "NIKON-D850",
+    "price": 2996.95,
+    "brand": "Nikon",
+    "category": "DSLR Camera"
+  },
+  {
+    "name": "Canon EF 50mm f/1.2L USM Lens",
+    "description": "A classic ultra-fast prime lens for Canon's EF mount, known for its dreamy rendering and incredible light-gathering capabilities.",
+    "sku": "CANON-EF50F12L",
+    "price": 1349.0,
+    "brand": "Canon",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Sony Alpha a7S III Mirrorless Camera",
+    "description": "The king of low-light video. The a7S III features a 12MP sensor optimized for video, delivering clean 4K footage even at very high ISOs.",
+    "sku": "SONY-ILCE-7SM3",
+    "price": 3498.0,
+    "brand": "Sony",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Fujifilm XF 90mm f/2 R LM WR Lens",
+    "description": "A weather-resistant telephoto prime lens that is exceptionally sharp, making it a perfect choice for portraits and capturing fine details.",
+    "sku": "FUJI-XF90F2",
+    "price": 949.0,
+    "brand": "Fujifilm",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Leica Noctilux-M 50mm f/0.95 ASPH. Lens",
+    "description": "An iconic, ultra-fast lens that creates a unique, unmistakable look with an extremely shallow depth of field. A lens for true artists.",
+    "sku": "LEICA-11602",
+    "price": 12995.0,
+    "brand": "Leica",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Nikkor Z 85mm f/1.8 S Lens",
+    "description": "A high-performance portrait lens for the Nikon Z system, offering excellent sharpness, pleasing bokeh, and a fast, silent autofocus motor.",
+    "sku": "NIKKOR-Z85F18S",
+    "price": 796.95,
+    "brand": "Nikon",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Canon RF 100mm f/2.8 L MACRO IS USM Lens",
+    "description": "A professional macro lens that offers up to 1.4x magnification, along with a Spherical Aberration control ring for adjusting bokeh.",
+    "sku": "CANON-RF100F28L",
+    "price": 1299.0,
+    "brand": "Canon",
+    "category": "Macro Lens"
+  },
+  {
+    "name": "Sony FE 135mm f/1.8 GM Lens",
+    "description": "A G Master telephoto prime lens considered one of the sharpest lenses ever made, delivering incredible resolution and beautiful bokeh.",
+    "sku": "SONY-SEL135F18GM",
+    "price": 2098.0,
+    "brand": "Sony",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Hasselblad XCD 2,5/90V Lens",
+    "description": "A fast and lightweight telephoto lens for the X System, perfect for portraits and close-up photography with its minimum focusing distance.",
+    "sku": "HASS-XCD90V",
+    "price": 4299.0,
+    "brand": "Hasselblad",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Panasonic Lumix S Pro 70-200mm f/2.8 O.I.S. Lens",
+    "description": "A professional telephoto zoom for the L-mount system, offering a constant f/2.8 aperture and powerful image stabilization.",
+    "sku": "PANA-S-E70200",
+    "price": 2597.99,
+    "brand": "Panasonic",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Sigma 20mm f/1.4 DG DN Art Lens",
+    "description": "An ultra-wide prime lens with a very bright f/1.4 aperture, making it an excellent choice for astrophotography and low-light landscapes.",
+    "sku": "SIGMA-20F14-DG-DN",
+    "price": 899.0,
+    "brand": "Sigma",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Fujifilm X-T30 II Mirrorless Camera",
+    "description": "A compact and powerful camera that shares many features with the flagship X-T series, making it a popular choice for enthusiasts and travelers.",
+    "sku": "FUJI-XT30II-BLK",
+    "price": 899.95,
+    "brand": "Fujifilm",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Nikon D6 DSLR Camera",
+    "description": "Nikon's flagship professional DSLR, built for speed and reliability with the most advanced autofocus system in a Nikon DSLR.",
+    "sku": "NIKON-D6",
+    "price": 6496.95,
+    "brand": "Nikon",
+    "category": "DSLR Camera"
+  },
+  {
+    "name": "Canon EOS-1D X Mark III DSLR Camera",
+    "description": "The pinnacle of Canon's DSLR technology, offering incredible speed, a rugged build, and advanced connectivity for professional sports and photojournalism.",
+    "sku": "CANON-1DXM3",
+    "price": 6499.0,
+    "brand": "Canon",
+    "category": "DSLR Camera"
+  },
+  {
+    "name": "Sony Alpha 9 III Mirrorless Camera",
+    "description": "The world's first full-frame camera with a global shutter sensor, enabling flash sync at any shutter speed and completely distortion-free images.",
+    "sku": "SONY-ILCE-9M3",
+    "price": 5998.0,
+    "brand": "Sony",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Leica APO-Summicron-M 50mm f/2 ASPH. Lens",
+    "description": "Considered by many to be one of the most optically perfect lenses ever made, delivering unmatched sharpness and correction.",
+    "sku": "LEICA-11141",
+    "price": 8995.0,
+    "brand": "Leica",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Tamron 150-500mm f/5-6.7 Di III VC VXD Lens",
+    "description": "A compact super-telephoto zoom lens for Sony E-mount, offering great reach and image stabilization for wildlife and sports.",
+    "sku": "TAM-A057",
+    "price": 1399.0,
+    "brand": "Tamron",
+    "category": "Telephoto Lens"
+  },
+  {
+    "name": "Nikkor Z MC 105mm f/2.8 VR S Lens",
+    "description": "A professional-grade macro lens for the Z system, offering 1:1 life-size reproduction ratio and stunning image quality.",
+    "sku": "NIKKOR-ZMC105",
+    "price": 1046.95,
+    "brand": "Nikon",
+    "category": "Macro Lens"
+  },
+  {
+    "name": "Fujifilm GFX 50S II Medium Format Camera",
+    "description": "An accessible entry into the world of medium format photography, featuring a 51.4MP sensor and in-body image stabilization.",
+    "sku": "FUJI-GFX50SII",
+    "price": 3999.0,
+    "brand": "Fujifilm",
+    "category": "Medium Format Camera"
+  },
+  {
+    "name": "Canon RF 50mm f/1.2 L USM Lens",
+    "description": "A legendary prime lens that redefined what was possible for a standard lens, with incredible sharpness even wide open at f/1.2.",
+    "sku": "CANON-RF50F12L",
+    "price": 2099.0,
+    "brand": "Canon",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Sony FE 24mm f/1.4 GM Lens",
+    "description": "A wide-angle G Master prime that is both incredibly sharp and remarkably compact, perfect for landscapes, astrophotography, and vlogging.",
+    "sku": "SONY-SEL24F14GM",
+    "price": 1398.0,
+    "brand": "Sony",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Hasselblad XCD 2,8/135mm Lens",
+    "description": "A telephoto lens for the X System that provides a 105mm full-frame equivalent field of view, ideal for portraits.",
+    "sku": "HASS-XCD135",
+    "price": 4799.0,
+    "brand": "Hasselblad",
+    "category": "Telephoto Lens"
+  },
+  {
+    "name": "Panasonic Lumix S 24-105mm f/4 Macro O.I.S. Lens",
+    "description": "A versatile standard zoom lens for the L-mount, covering a wide focal range with a constant f/4 aperture and useful macro capabilities.",
+    "sku": "PANA-S-R24105",
+    "price": 1297.99,
+    "brand": "Panasonic",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Sigma 105mm f/2.8 DG DN Macro Art Lens",
+    "description": "A dedicated macro lens for mirrorless systems that offers 1:1 magnification and exceptional Art-line image quality.",
+    "sku": "SIGMA-105F28-DG-DN",
+    "price": 799.0,
+    "brand": "Sigma",
+    "category": "Macro Lens"
+  },
+  {
+    "name": "Nikon Z6 II Mirrorless Camera",
+    "description": "A versatile and well-rounded full-frame camera, featuring dual processors, dual card slots, and excellent performance for both stills and video.",
+    "sku": "NIKON-Z6II",
+    "price": 1996.95,
+    "brand": "Nikon",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Canon EOS R8 Full-Frame Mirrorless Camera",
+    "description": "A lightweight and affordable full-frame camera that inherits the powerful autofocus and sensor from the higher-end EOS R6 Mark II.",
+    "sku": "CANON-EOS-R8",
+    "price": 1299.0,
+    "brand": "Canon",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Sony Alpha a7CR Compact High-Resolution Camera",
+    "description": "This camera puts the 61MP sensor from the a7R V into a compact, rangefinder-style body, creating a powerhouse for travel and landscape photographers.",
+    "sku": "SONY-ILCE-7CR",
+    "price": 2998.0,
+    "brand": "Sony",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Fujifilm XF 33mm f/1.4 R LM WR Lens",
+    "description": "The new standard prime lens for the X-mount system, offering exceptional sharpness and a fast linear motor for quick, quiet autofocus.",
+    "sku": "FUJI-XF33F14",
+    "price": 799.0,
+    "brand": "Fujifilm",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Leica SL3 Mirrorless Camera",
+    "description": "The latest in the SL line, featuring a 60MP sensor, phase-detect autofocus, and a new tilting screen while maintaining Leica's legendary build quality.",
+    "sku": "LEICA-SL3",
+    "price": 6995.0,
+    "brand": "Leica",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Nikkor Z 24-70mm f/2.8 S Lens",
+    "description": "The professional workhorse zoom for the Nikon Z system, delivering uncompromising image quality, robust build, and a useful OLED information panel.",
+    "sku": "NIKKOR-Z2470F28",
+    "price": 2396.95,
+    "brand": "Nikon",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Canon RF 135mm f/1.8 L IS USM Lens",
+    "description": "A telephoto prime lens designed for portraits, offering a flattering focal length, a very bright aperture, and effective image stabilization.",
+    "sku": "CANON-RF135F18L",
+    "price": 2099.0,
+    "brand": "Canon",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Sony FE 12-24mm f/2.8 GM Lens",
+    "description": "An extreme ultra-wide angle zoom lens with a constant f/2.8 aperture, perfect for dramatic landscapes and architectural photography.",
+    "sku": "SONY-SEL1224GM",
+    "price": 2998.0,
+    "brand": "Sony",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Hasselblad XCD 4/28P Lens",
+    "description": "A wide-angle lens for the X System, offering a 22mm full-frame equivalent field of view in a very compact and lightweight design.",
+    "sku": "HASS-XCD28P",
+    "price": 1679.0,
+    "brand": "Hasselblad",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Panasonic Lumix S5 Full-Frame Camera",
+    "description": "A compact and capable full-frame camera that offers excellent video features and image quality, making it a great value for hybrid shooters.",
+    "sku": "PANA-DC-S5",
+    "price": 1497.99,
+    "brand": "Panasonic",
+    "category": "Mirrorless Camera"
+  },
+  {
+    "name": "Sigma 50mm f/1.4 DG DN Art Lens",
+    "description": "The Art-line standard prime for mirrorless, providing exceptional sharpness and optical performance that competes with the best.",
+    "sku": "SIGMA-50F14-DG-DN",
+    "price": 849.0,
+    "brand": "Sigma",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Fujifilm GFX 100 II Medium Format Camera",
+    "description": "A flagship medium format camera with a 102MP sensor, 8K video, and significantly improved autofocus and burst shooting capabilities.",
+    "sku": "FUJI-GFX100II",
+    "price": 7499.95,
+    "brand": "Fujifilm",
+    "category": "Medium Format Camera"
+  },
+  {
+    "name": "Nikon Z 35mm f/1.8 S Lens",
+    "description": "A high-quality wide-angle prime for the Z system, offering excellent sharpness and a popular focal length for everyday photography.",
+    "sku": "NIKKOR-Z35F18S",
+    "price": 846.95,
+    "brand": "Nikon",
+    "category": "Prime Lens"
+  },
+  {
+    "name": "Canon EOS R5 C Cinema Camera",
+    "description": "A true hybrid that combines the stills capabilities of the R5 with professional cinema features like a dedicated timecode port and active cooling.",
+    "sku": "CANON-R5C",
+    "price": 3799.0,
+    "brand": "Canon",
+    "category": "Cinema Camera"
+  },
+  {
+    "name": "Sony FE 20-70mm f/4 G Lens",
+    "description": "A unique standard zoom that extends to an ultra-wide 20mm, making it an incredibly versatile lens for vlogging, travel, and landscapes.",
+    "sku": "SONY-SEL2070G",
+    "price": 1098.0,
+    "brand": "Sony",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Leica M-A (Typ 127) Film Camera",
+    "description": "A purely mechanical film camera with no light meter or electronics. It is the ultimate expression of manual photography.",
+    "sku": "LEICA-MA-BLK",
+    "price": 5595.0,
+    "brand": "Leica",
+    "category": "Film Camera"
+  },
+  {
+    "name": "Tamron 17-70mm f/2.8 Di III-A VC RXD Lens",
+    "description": "A versatile zoom lens for APS-C Sony E-mount cameras, offering a fast f/2.8 aperture and image stabilization.",
+    "sku": "TAM-B070",
+    "price": 799.0,
+    "brand": "Tamron",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Pentax K-1 Mark II DSLR Camera",
+    "description": "A rugged, weather-sealed full-frame DSLR with a unique Pixel Shift Resolution system and built-in GPS and Astrotracer functions.",
+    "sku": "PENTAX-K1-II",
+    "price": 1796.95,
+    "brand": "Pentax",
+    "category": "DSLR Camera"
+  },
+  {
+    "name": "Sigma 18-50mm f/2.8 DC DN Contemporary Lens",
+    "description": "An incredibly small and lightweight standard zoom for APS-C mirrorless cameras, featuring a constant f/2.8 aperture.",
+    "sku": "SIGMA-1850F28-DC-DN",
+    "price": 549.0,
+    "brand": "Sigma",
+    "category": "Zoom Lens"
+  },
+  {
+    "name": "Nikon D780 DSLR Camera",
+    "description": "A hybrid DSLR that incorporates mirrorless technology, featuring on-sensor phase-detect autofocus for excellent live view and video performance.",
+    "sku": "NIKON-D780",
+    "price": 2296.95,
+    "brand": "Nikon",
+    "category": "DSLR Camera"
+  },
+  {
+    "name": "Canon RF 800mm f/11 IS STM Lens",
+    "description": "A surprisingly compact and affordable super-telephoto prime lens, made possible by a fixed f/11 aperture and diffractive optics.",
+    "sku": "CANON-RF800F11",
+    "price": 899.99,
+    "brand": "Canon",
+    "category": "Telephoto Lens"
+  },
+  {
+    "name": "Sony Alpha 7C R + FE 40mm F2.5 G Lens Kit",
+    "description": "A premium compact kit pairing the high-resolution 61MP a7CR with a small, high-quality 40mm prime lens.",
+    "sku": "SONY-A7CR-40G-KIT",
+    "price": 3696.0,
+    "brand": "Sony",
+    "category": "Mirrorless Kit"
+  }
+]

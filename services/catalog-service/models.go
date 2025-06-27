@@ -16,6 +16,8 @@ type Product struct {
     Description string             `json:"description" bson:"description"`
     Price       float64            `json:"price" bson:"price"`
     SKU         string             `json:"sku" bson:"sku"`
+    Brand       string             `json:"brand" bson:"brand"`
+    Category    string            `json:"category" bson:"category"`
 }
 
 // contextKey is a custom type to avoid key collisions in context.

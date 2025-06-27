@@ -14,10 +14,12 @@ type Env struct {
 
 // Product defines the structure of data we expect from the catalog-service.
 type Product struct {
-	ID    string  `json:"id"`
-	Name  string  `json:"name"`
-	Price float64 `json:"price"`
-	SKU   string  `json:"sku"`
+	ID    		string  `json:"id"`
+	Name  		string  `json:"name"`
+	Price 		float64 `json:"price"`
+	SKU   		string  `json:"sku"`
+	Brand		string  `json:"brand"`
+    Category	string  `json:"category"`
 }
 
 // AddItemRequest is the expected body when adding an item to the cart.

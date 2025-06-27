@@ -49,10 +49,9 @@ func jwtMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		// The 'sub' (subject) claim holds our user's email.
-		userEmail, ok := claims["sub"].(string)
+		userEmail, ok := claims["email"].(string)
 		if !ok {
-			http.Error(w, "Invalid subject in token claims", http.StatusUnauthorized)
+			http.Error(w, "Email claim not found in token", http.StatusUnauthorized)
 			return
 		}
 
