@@ -7,7 +7,7 @@ import {
 
 import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
-import MainLayout from "./layouts/MainLayout";
+import MainLayout from "./components/layouts/MainLayout";
 import RegisterPage from "./pages/ReigsterPage";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";

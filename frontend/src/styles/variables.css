@@ -1,0 +1,12 @@
+:root {
+  --text: #2a2a2a;
+  --subtext: #7c7c7c;
+  --border: #dcdcdc;
+  --dark: #4b4a4a;
+  --white: #ffffff;
+  --fuji-red: #ed1941;
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+}

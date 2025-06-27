@@ -1,9 +1,15 @@
+@import "./variables.css";
+@import "./topBar.css";
+
+@import "./homePage.css";
+@import "./searchBar.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  background-color: var(--bg);
+  background-color: var(--white);
   color: var(--text);
   font-family: "Merriweather", serif;
 }
@@ -18,4 +24,25 @@ html {
 section {
   padding: 1.2rem;
   align-items: center;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.2rem;
+}
+
+h2 {
+  font-size: 1.2rem;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: 0.1rem;
+}
+
+p {
+  font-family: "Inter", sans-serif;
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--subtext);
+  letter-spacing: 0.07rem;
+  line-height: 2;
 }

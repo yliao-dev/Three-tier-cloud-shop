@@ -1,0 +1,17 @@
+.home__page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 5rem 2rem;
+  box-sizing: border-box;
+}
+
+.home__intro {
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  margin-top: auto;
+  gap: 2rem;
+}
