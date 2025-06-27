@@ -77,10 +77,9 @@ const CartPage = () => {
           </thead>
           <tbody>
             {detailedCartItems.map((item) => (
-              <tr key={item.productId}>
+              <tr key={item.sku}>
                 <td>{item.name}</td>
                 <td>
-                  {/* NEW: Buttons to update quantity */}
                   <button
                     onClick={() =>
                       updateItem({
