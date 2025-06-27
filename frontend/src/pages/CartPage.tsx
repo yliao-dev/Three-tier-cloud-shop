@@ -59,6 +59,9 @@ const CartPage = () => {
       lineTotal: lineTotal,
     };
   });
+  // detailedCartItems.forEach((item, index) => {
+  //   console.log(`Item ${index}:`, item.sku);
+  // });
   // ---
 
   return (

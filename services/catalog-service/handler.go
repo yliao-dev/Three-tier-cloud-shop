@@ -110,6 +110,45 @@ func (env *Env) getProductBySKUHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 
+// batchGetProductsBySKUHandler finds multiple products by a list of SKUs.
+func (env *Env) batchGetProductsBySKUHandler(w http.ResponseWriter, r *http.Request) {
+	var requestBody struct {
+		SKUs []string `json:"skus"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	if len(requestBody.SKUs) == 0 {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte("[]"))
+		return
+	}
+
+	// Use the MongoDB "$in" operator to find all documents where the "sku" field
+	// matches any value in the provided slice. This is very efficient.
+	filter := bson.M{"sku": bson.M{"$in": requestBody.SKUs}}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	cursor, err := env.collection.Find(ctx, filter)
+	if err != nil {
+		http.Error(w, "Failed to fetch products", http.StatusInternalServerError)
+		return
+	}
+	defer cursor.Close(ctx)
+
+	var products []Product
+	if err = cursor.All(ctx, &products); err != nil {
+		http.Error(w, "Failed to decode products", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(products)
+}
+
 
 func (env *Env) createProductHandler(w http.ResponseWriter, r *http.Request) {
 	var newProduct Product
