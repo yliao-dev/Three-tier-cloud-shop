@@ -18,17 +18,17 @@
 .search-filter-bar {
   display: flex;
   width: 100%;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  border: 0.02rem solid var(--boarder-white);
+  box-shadow: 0 0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.1),
+    0 0.1rem 0.5rem -0.1rem rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  height: 56px;
+  height: 3.5rem;
 }
 
 .filter-select {
   flex-grow: 1;
-  border-right: 1px solid #e5e7eb;
+  border-right: 0.02rem solid var(--boarder-white);
 }
 
 .search-input-container {
@@ -43,8 +43,7 @@
   border: none;
   padding: 0 1rem;
   font-size: 1rem;
-  color: #111827;
-  background-color: transparent;
+  color: var(--text);
 }
 
 .search-input:focus {
@@ -55,8 +54,7 @@
 .search-button {
   height: 100%;
   border: none;
-  background-color: #4f46e5; /* A nice indigo color */
-  color: white;
+  background-color: var(--boarder-white);
   padding: 0 1.5rem;
   cursor: pointer;
   display: flex;
@@ -66,7 +64,7 @@
 }
 
 .search-button:hover {
-  background-color: #4338ca;
+  opacity: 0.5;
 }
 
 /* --- React-Select Custom Styles --- */
@@ -85,7 +83,7 @@
 }
 
 .react-select__placeholder {
-  color: #6b7280 !important;
+  color: var(--subtext) !important;
 }
 
 .react-select__indicator-separator {
