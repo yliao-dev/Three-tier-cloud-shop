@@ -124,7 +124,7 @@
 }
 
 .panel-nav a:hover {
-  background-color: var(--fuji-red);
+  background-color: var(--hover);
 }
 
 /* Overlay for when panel is open */
@@ -230,8 +230,8 @@
 }
 
 .dropdown-item:hover {
-  background-color: var(--boarder-white);
-  color: #111827;
+  background-color: var(--hover);
+  color: var(--text);
 }
 
 .dropdown-item .item-icon {

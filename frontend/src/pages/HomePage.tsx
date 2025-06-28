@@ -1,21 +1,21 @@
 import { useMemo, useState } from "react";
-import Select from "react-select";
 import { FiSearch } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../api/client";
+import CheckboxDropdown from "../components/CheckboxDropdown"; // Import the new component
 
-// --- API Fetching Functions ---
+// --- API Fetching Functions (unchanged) ---
 const fetchBrands = async (): Promise<string[]> => {
   const response = await apiClient.get<string[]>("/products/brands");
-  return response.data.sort(); // Sort alphabetically
+  return response.data.sort();
 };
 
 const fetchCategories = async (): Promise<string[]> => {
   const response = await apiClient.get<string[]>("/products/categories");
-  return response.data.sort(); // Sort alphabetically
+  return response.data.sort();
 };
 
-// --- Helper function to format data for react-select ---
+// --- Helper function (unchanged) ---
 const formatOptions = (items: string[] | undefined) => {
   if (!items) return [];
   return items.map((item) => ({
@@ -26,8 +26,13 @@ const formatOptions = (items: string[] | undefined) => {
 
 const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  // State to hold the selected filter values (now using a Set)
+  const [selectedCategories, setSelectedCategories] = useState(
+    () => new Set<string>()
+  );
+  const [selectedBrands, setSelectedBrands] = useState(() => new Set<string>());
 
-  // --- Fetch dynamic data using React Query ---
+  // --- Fetch dynamic data (unchanged) ---
   const { data: brands, isLoading: isLoadingBrands } = useQuery({
     queryKey: ["brands"],
     queryFn: fetchBrands,
@@ -38,8 +43,6 @@ const HomePage = () => {
     queryFn: fetchCategories,
   });
 
-  // --- Transform the data for the Select components ---
-  // useMemo prevents re-calculating this on every render unless the source data changes.
   const brandOptions = useMemo(() => formatOptions(brands), [brands]);
   const categoryOptions = useMemo(
     () => formatOptions(categories),
@@ -47,10 +50,10 @@ const HomePage = () => {
   );
 
   const handleSearch = () => {
-    // This is where you would trigger the search logic
     console.log("Searching for:", {
       query: searchQuery,
-      // You would also get selected categories and brands from state here
+      categories: Array.from(selectedCategories), // Convert Set to Array for logging/API call
+      brands: Array.from(selectedBrands),
     });
   };
 
@@ -61,38 +64,40 @@ const HomePage = () => {
         <p>High-quality cameras, lenses, and accessories for every creator.</p>
       </div>
 
-      {/* --- New Search & Filter Bar --- */}
-      <div className="search-filter-bar">
-        <div className="filter-select category-select">
-          <Select
-            isMulti
+      <div className="home__search-bar">
+        {/* Category Select */}
+        <div className="home__filter-container">
+          <CheckboxDropdown
+            placeholder="Category"
             options={categoryOptions}
-            placeholder="Select Category..."
-            className="react-select-container"
-            classNamePrefix="react-select"
+            selected={selectedCategories}
+            onChange={setSelectedCategories}
             isLoading={isLoadingCategories}
           />
         </div>
-        <div className="filter-select brand-select">
-          <Select
-            isMulti
+
+        {/* Brand Select */}
+        <div className="home__filter-container">
+          <CheckboxDropdown
+            placeholder="Brand"
             options={brandOptions}
-            placeholder="Select Brand..."
-            className="react-select-container"
-            classNamePrefix="react-select"
+            selected={selectedBrands}
+            onChange={setSelectedBrands}
             isLoading={isLoadingBrands}
           />
         </div>
-        <div className="search-input-container">
+
+        {/* Text Search Input */}
+        <div className="home__search-input-container">
           <input
             type="text"
-            className="search-input"
+            className="home__search-input"
             placeholder="Search for a product..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
           />
-          <button className="search-button" onClick={handleSearch}>
+          <button className="home__search-button" onClick={handleSearch}>
             <FiSearch size={20} />
           </button>
         </div>
