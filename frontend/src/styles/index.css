@@ -2,6 +2,7 @@
 @import "./topBar.css";
 
 @import "./homePage.css";
+@import "./searchFilters.css";
 @import "./checkboxDropdown.css";
 
 @tailwind base;

@@ -99,8 +99,9 @@ const TopBar = () => {
                 className={`profile-dropdown ${isProfileOpen ? "open" : ""}`}
               >
                 <div className="profile-dropdown-header">
+                  {/* The new icon replaces the img tag */}
                   <img
-                    src={`https://i.pravatar.cc/40?u=${user.email}`}
+                    src={`https://i.pravatar.cc/1?u=${user.email}`}
                     alt="User Avatar"
                     className="profile-avatar"
                   />
@@ -119,6 +120,16 @@ const TopBar = () => {
                   <CgProfile className="item-icon" />
                   View Profile
                 </Link>
+
+                <Link
+                  to="/hisotry"
+                  className="dropdown-item"
+                  onClick={() => setIsProfileOpen(false)}
+                >
+                  <FiSettings className="item-icon" />
+                  Order History
+                </Link>
+
                 <Link
                   to="/settings"
                   className="dropdown-item"
