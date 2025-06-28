@@ -29,7 +29,7 @@
 
 .top-bar-right {
   justify-content: flex-end;
-  gap: 1.5rem; /* Space between "About" and the cart */
+  gap: 2rem; /* Space between "About" and the cart */
 }
 
 /* Shop Name Styling */

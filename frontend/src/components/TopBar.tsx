@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
 import { FiMenu, FiShoppingCart } from "react-icons/fi";
+import { CgProfile } from "react-icons/cg";
+import { RiMenu2Fill } from "react-icons/ri";
 
 const TopBar = () => {
   const { cart } = useCart();
@@ -11,8 +13,11 @@ const TopBar = () => {
     <header className="top-bar">
       {/* Left Aligned Items */}
       <div className="top-bar-left">
-        <button className="top-bar-icon-button" aria-label="Menu">
-          <FiMenu size={24} />
+        <button
+          className="top-bar-icon-button menu-widget"
+          aria-label="Menu Button"
+        >
+          <RiMenu2Fill size={30} />
         </button>
       </div>
 
@@ -25,15 +30,20 @@ const TopBar = () => {
 
       {/* Right Aligned Items */}
       <div className="top-bar-right">
-        <Link to="/about" className="top-bar-link">
-          About
+        <Link
+          to="/dashboard"
+          className="top-bar-icon-button profile-widget"
+          aria-label="Profile Icon"
+        >
+          <CgProfile size={30} />
         </Link>
+
         <Link
           to="/cart"
           className="top-bar-icon-button cart-widget"
           aria-label="Shopping Cart"
         >
-          <FiShoppingCart size={24} />
+          <FiShoppingCart size={30} />
           {cartItemCount > 0 && (
             <span className="cart-badge">{cartItemCount}</span>
           )}
