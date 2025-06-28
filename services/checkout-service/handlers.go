@@ -9,7 +9,9 @@ import (
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // This is the main orchestration handler for the checkout process.
@@ -166,4 +168,52 @@ func (env *Env) clearCart(authToken string) error {
 
 	log.Println("Successfully cleared cart.")
 	return nil
+}
+
+
+// In services/checkout-/handler.go
+
+// getOrdersForUserHandler retrieves all orders for the authenticated user.
+func (env *Env) getOrdersForUserHandler(w http.ResponseWriter, r *http.Request) {
+	// 1. Get the user's email from the context, provided by the JWT middleware.
+	userEmail, ok := r.Context().Value(UserEmailKey).(string)
+	if !ok {
+		http.Error(w, "Could not retrieve user from token", http.StatusInternalServerError)
+		return
+	}
+
+	// 2. Get the 'orders' collection handle.
+	collection := env.mongoClient.Database("cloud_shop").Collection("orders")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	// 3. Create a filter to find all documents where 'userEmail' matches.
+	filter := bson.M{"userEmail": userEmail}
+	
+	// Optional but recommended: Sort the results by creation date, newest first.
+	opts := options.Find().SetSort(bson.D{{"createdAt", -1}})
+
+	// 4. Execute the query.
+	cursor, err := collection.Find(ctx, filter, opts)
+	if err != nil {
+		http.Error(w, "Failed to fetch orders", http.StatusInternalServerError)
+		return
+	}
+	defer cursor.Close(ctx)
+
+	// 5. Decode the results into a slice.
+	var orders []Order
+	if err = cursor.All(ctx, &orders); err != nil {
+		http.Error(w, "Failed to decode orders", http.StatusInternalServerError)
+		return
+	}
+
+	// Return an empty array instead of null if no orders are found.
+	if orders == nil {
+		orders = make([]Order, 0)
+	}
+
+	// 6. Send the response.
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(orders)
 }

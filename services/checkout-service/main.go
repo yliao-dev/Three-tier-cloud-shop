@@ -74,6 +74,7 @@ func main() {
 	// --- Routing: Use the new Go 1.22+ ServeMux ---
 	mux := http.NewServeMux()
 	mux.Handle("POST /api/checkout", jwtMiddleware(http.HandlerFunc(env.checkoutHandler)))
+    mux.Handle("GET /api/orders", jwtMiddleware(http.HandlerFunc(env.getOrdersForUserHandler)))
 
 	// --- Start Server ---
 	log.Println("Checkout service starting on port 8084...")
