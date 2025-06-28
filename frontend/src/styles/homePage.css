@@ -11,21 +11,41 @@
   margin-bottom: 3rem;
 }
 
-.home__intro h1 {
-  font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 0.5rem;
-}
-
 .home__intro p {
   font-size: 1.125rem;
-  color: var(--subtext);
+  color: var(--white);
 }
 
-.home__hero-image {
+.hero-container {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 70%;
+  width: 95%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-image {
+  display: block;
+  width: 100%;
+  height: auto;
   border-radius: 1rem;
+}
+
+.hero-content {
+  position: absolute;
+  text-align: center;
+  color: white;
+  padding: 2rem;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.hero-link {
+  display: inline-block;
+  background-color: transparent;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
 }

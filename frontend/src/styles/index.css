@@ -43,7 +43,6 @@ p {
   font-family: "Inter", sans-serif;
   font-size: 0.8rem;
   font-weight: var(--font-weight-regular);
-  color: var(--subtext);
   letter-spacing: 0.07rem;
   line-height: 2;
 }
