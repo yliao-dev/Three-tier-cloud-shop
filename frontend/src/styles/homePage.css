@@ -2,11 +2,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: center; */ /* We want content at the top */
-  min-height: calc(100vh - 65px); /* Full height minus topbar */
   padding: 4rem 2rem;
   box-sizing: border-box;
-  background-color: #f9fafb;
 }
 
 .home__intro {
@@ -17,25 +14,10 @@
   margin-bottom: 3rem;
 }
 
-.home__intro h1 {
-  font-size: 3rem;
-  font-weight: 800;
-  color: #111827;
-  letter-spacing: -1px;
-}
-
-.home__intro p {
-  font-size: 1.125rem;
-  color: #6b7280;
-  max-width: 600px;
-}
-
 /* --- Search & Filter Bar Styles --- */
 .search-filter-bar {
   display: flex;
   width: 100%;
-  max-width: 900px;
-  background-color: #ffffff;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),

@@ -5,7 +5,6 @@
   align-items: center;
   padding: 1rem 2rem;
   background-color: var(--white);
-  color: #111827;
   height: 5rem;
   box-sizing: border-box;
 }
@@ -29,7 +28,7 @@
 
 .top-bar-right {
   justify-content: flex-end;
-  gap: 2rem;
+  gap: 6rem;
 }
 
 /* Shop Name Styling */
@@ -41,27 +40,14 @@
   letter-spacing: -0.05rem;
 }
 
-/* "About" Link Styling */
-.top-bar-link {
-  font-size: 1rem;
-  font-weight: 500;
-  text-decoration: none;
-  color: var(--dark);
-  transition: color 0.2s ease-in-out;
-}
-
-.top-bar-link:hover {
-  opacity: 0.5;
-}
-
 /* Styling for both the menu and cart buttons */
 .top-bar-icon-button {
+  display: flex;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0.5rem;
   color: var(--dark);
-  display: flex;
   align-items: center;
   justify-content: center;
   transition: color 0.2s ease-in-out;
@@ -83,7 +69,7 @@
   top: -0.2rem;
   right: -0.2rem;
   background-color: var(--fuji-red);
-  color: white;
+  color: var(--white);
   border-radius: 50%;
   width: 1rem;
   height: 1rem;
@@ -100,10 +86,9 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 280px;
+  width: 15rem;
   height: 100%;
-  background-color: #fff;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--white);
   transform: translateX(-100%);
   transition: transform 0.3s ease-in-out;
   z-index: 1002;
@@ -133,14 +118,13 @@
 
 .panel-nav a {
   text-decoration: none;
-  color: #333;
+  color: var(--dark);
   font-size: 1.2rem;
   padding: 0.5rem;
-  border-radius: 4px;
 }
 
 .panel-nav a:hover {
-  background-color: #f3f4f6;
+  background-color: var(--fuji-red);
 }
 
 /* Overlay for when panel is open */
@@ -169,15 +153,15 @@
 
 .profile-dropdown {
   position: absolute;
-  top: calc(100% + 10px); /* Position it below the button with a small gap */
-  right: 0;
-  background-color: white;
-  border: 1px solid #e5e7eb;
+  top: calc(100%); /* Position it below the button with a small gap */
+  left: calc(-100%);
+  background-color: var(--white);
+  border: 0.05rem solid var(--boarder-white);
   border-radius: 12px; /* Softer corners */
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.5rem 0.5rem -0.5rem rgba(0, 0, 0, 0.1),
+    0 0.1rem 0.5rem -0.1rem rgba(0, 0, 0, 0.1);
   padding: 0.5rem;
-  width: 240px; /* Wider for more content */
+  width: 15rem;
   z-index: 1001;
   display: flex;
   flex-direction: column;
@@ -200,15 +184,15 @@
   display: flex;
   align-items: center;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--boarder-white);
   margin-bottom: 0.5rem;
 }
 
 .profile-avatar {
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
-  margin-right: 12px;
+  margin-right: 1rem;
   object-fit: cover;
 }
 
@@ -218,13 +202,13 @@
 }
 
 .user-info .name {
-  font-weight: 600;
-  color: #111827;
+  font-weight: var(--font-weight-bold);
+  color: var(--text);
 }
 
 .user-info .title {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--subtext);
 }
 
 /* Styling for each item in the dropdown */
@@ -234,35 +218,33 @@
   gap: 0.75rem;
   text-align: left;
   padding: 0.75rem 1rem;
-  border-radius: 6px;
+  border-radius: 0.25rem;
   text-decoration: none;
-  color: #374151;
+  color: var(--text);
   background: none;
   border: none;
   cursor: pointer;
-  width: 100%;
   font-size: 1rem;
   transition: background-color 0.2s ease-out, color 0.2s ease-out;
   font-family: inherit; /* Ensures the button uses the same font as the links */
-  font-weight: 500;
 }
 
 .dropdown-item:hover {
-  background-color: #f3f4f6;
+  background-color: var(--boarder-white);
   color: #111827;
 }
 
 .dropdown-item .item-icon {
-  color: #6b7280;
+  color: var(--subtext);
 }
 
 .dropdown-item:hover .item-icon {
-  color: #111827;
+  color: var(--text);
 }
 
 /* Separator line between groups */
 .dropdown-separator {
-  height: 1px;
-  background-color: #e5e7eb;
+  height: 0.05rem;
+  background-color: var(--boarder-white);
   margin: 0.5rem 0;
 }
