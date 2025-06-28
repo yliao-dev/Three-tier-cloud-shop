@@ -1,55 +1,154 @@
-import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
-import { FiMenu, FiShoppingCart } from "react-icons/fi";
+import { useAuthContext } from "../context/AuthContext";
+import { FiLogOut, FiSettings, FiShoppingCart } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
-import { RiMenu2Fill } from "react-icons/ri";
+import { RiMenu2Fill, RiCloseFill } from "react-icons/ri";
 
 const TopBar = () => {
   const { cart } = useCart();
+  const { user, logout } = useAuthContext();
+  const navigate = useNavigate();
+
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  const profileRef = useRef<HTMLDivElement>(null);
+
   const cartItemCount =
     cart?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
+  const handleLogout = () => {
+    logout();
+    setIsProfileOpen(false);
+    navigate("/");
+  };
+
+  // Close profile dropdown if clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target as Node)
+      ) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [profileRef]);
+
   return (
-    <header className="top-bar">
-      {/* Left Aligned Items */}
-      <div className="top-bar-left">
+    <>
+      {/* Overlay for side panel */}
+      <div
+        className={`overlay ${isPanelOpen ? "show" : ""}`}
+        onClick={() => setIsPanelOpen(false)}
+      ></div>
+
+      {/* Side Panel */}
+      <div className={`side-panel ${isPanelOpen ? "open" : ""}`}>
         <button
-          className="top-bar-icon-button menu-widget"
-          aria-label="Menu Button"
+          onClick={() => setIsPanelOpen(false)}
+          className="close-panel-button"
         >
-          <RiMenu2Fill size={30} />
+          <RiCloseFill size={28} />
         </button>
+        <nav className="panel-nav">
+          <Link to="/dashboard" onClick={() => setIsPanelOpen(false)}>
+            Dashboard
+          </Link>
+          <Link to="/products" onClick={() => setIsPanelOpen(false)}>
+            Products
+          </Link>
+        </nav>
       </div>
 
-      {/* Center Aligned Items */}
-      <div className="top-bar-center">
-        <Link to="/" className="shop-name">
-          AuraLens
-        </Link>
-      </div>
+      {/* Main Top Bar */}
+      <header className="top-bar">
+        <div className="top-bar-left">
+          <button
+            className="top-bar-icon-button menu-widget"
+            aria-label="Menu Button"
+            onClick={() => setIsPanelOpen(true)}
+          >
+            <RiMenu2Fill size={30} />
+          </button>
+        </div>
 
-      {/* Right Aligned Items */}
-      <div className="top-bar-right">
-        <Link
-          to="/dashboard"
-          className="top-bar-icon-button profile-widget"
-          aria-label="Profile Icon"
-        >
-          <CgProfile size={30} />
-        </Link>
+        <div className="top-bar-center">
+          <Link to="/" className="shop-name">
+            AuraLens
+          </Link>
+        </div>
 
-        <Link
-          to="/cart"
-          className="top-bar-icon-button cart-widget"
-          aria-label="Shopping Cart"
-        >
-          <FiShoppingCart size={30} />
-          {cartItemCount > 0 && (
-            <span className="cart-badge">{cartItemCount}</span>
+        <div className="top-bar-right">
+          {user && (
+            <div className="profile-widget" ref={profileRef}>
+              <button
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className="top-bar-icon-button"
+                aria-label="Profile"
+              >
+                <CgProfile size={30} />
+              </button>
+              <div
+                className={`profile-dropdown ${isProfileOpen ? "open" : ""}`}
+              >
+                <div className="profile-dropdown-header">
+                  <img
+                    src={`https://i.pravatar.cc/40?u=${user.email}`}
+                    alt="User Avatar"
+                    className="profile-avatar"
+                  />
+                  <div className="user-info">
+                    <span className="name">
+                      {user.username || "Valued Customer"}
+                    </span>
+                    <span className="title">{user.email}</span>
+                  </div>
+                </div>
+                <Link
+                  to="/dashboard"
+                  className="dropdown-item"
+                  onClick={() => setIsProfileOpen(false)}
+                >
+                  <CgProfile className="item-icon" />
+                  View Profile
+                </Link>
+                <Link
+                  to="/settings"
+                  className="dropdown-item"
+                  onClick={() => setIsProfileOpen(false)}
+                >
+                  <FiSettings className="item-icon" />
+                  Account Settings
+                </Link>
+                <div className="dropdown-separator"></div>
+                <button onClick={handleLogout} className="dropdown-item">
+                  <FiLogOut className="item-icon" />
+                  Log Out
+                </button>
+              </div>
+            </div>
           )}
-        </Link>
-      </div>
-    </header>
+
+          <Link
+            to="/cart"
+            className="top-bar-icon-button cart-widget"
+            aria-label="Shopping Cart"
+          >
+            <FiShoppingCart size={30} />
+            {cartItemCount > 0 && (
+              <span className="cart-badge">{cartItemCount}</span>
+            )}
+          </Link>
+        </div>
+      </header>
+    </>
   );
 };
 
