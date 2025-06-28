@@ -86,7 +86,7 @@ const TopBar = () => {
         </div>
 
         <div className="top-bar-right">
-          {user && (
+          {user ? (
             <div className="profile-widget" ref={profileRef}>
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -145,6 +145,10 @@ const TopBar = () => {
                 </button>
               </div>
             </div>
+          ) : (
+            <Link to="/register" className="top-bar-link">
+              Sign Up
+            </Link>
           )}
 
           <Link

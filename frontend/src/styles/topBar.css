@@ -249,3 +249,7 @@
   background-color: var(--boarder-white);
   margin: 0.5rem 0;
 }
+
+.top-bar-link {
+  color: var(--primary-blue);
+}
