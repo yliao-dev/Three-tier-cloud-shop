@@ -1,8 +1,8 @@
 .home__search-bar {
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
   width: 100%;
-  max-width: 56rem;
+  max-width: 90%;
   align-items: center;
 }
 
