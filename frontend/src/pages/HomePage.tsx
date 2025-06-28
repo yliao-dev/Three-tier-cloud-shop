@@ -1,41 +1,104 @@
-import { Link } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContext";
+import { useMemo, useState } from "react";
+import Select from "react-select";
+import { FiSearch } from "react-icons/fi";
+import { useQuery } from "@tanstack/react-query";
+import apiClient from "../api/client";
+
+// --- API Fetching Functions ---
+const fetchBrands = async (): Promise<string[]> => {
+  const response = await apiClient.get<string[]>("/products/brands");
+  return response.data.sort(); // Sort alphabetically
+};
+
+const fetchCategories = async (): Promise<string[]> => {
+  const response = await apiClient.get<string[]>("/products/categories");
+  return response.data.sort(); // Sort alphabetically
+};
+
+// --- Helper function to format data for react-select ---
+const formatOptions = (items: string[] | undefined) => {
+  if (!items) return [];
+  return items.map((item) => ({
+    value: item.toLowerCase().replace(/ /g, "-"),
+    label: item,
+  }));
+};
 
 const HomePage = () => {
-  // 1. Get the current user and logout function from the global AuthContext
-  const { user, logout } = useAuthContext();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // --- Fetch dynamic data using React Query ---
+  const { data: brands, isLoading: isLoadingBrands } = useQuery({
+    queryKey: ["brands"],
+    queryFn: fetchBrands,
+  });
+
+  const { data: categories, isLoading: isLoadingCategories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+  });
+
+  // --- Transform the data for the Select components ---
+  // useMemo prevents re-calculating this on every render unless the source data changes.
+  const brandOptions = useMemo(() => formatOptions(brands), [brands]);
+  const categoryOptions = useMemo(
+    () => formatOptions(categories),
+    [categories]
+  );
+
+  const handleSearch = () => {
+    // This is where you would trigger the search logic
+    console.log("Searching for:", {
+      query: searchQuery,
+      // You would also get selected categories and brands from state here
+    });
+  };
 
   return (
-    <div>
-      <h1>Welcome to the Cloud Shop</h1>
+    <div className="home__page">
+      <div className="home__intro">
+        <h1>Find Your Perfect Gear</h1>
+        <p>High-quality cameras, lenses, and accessories for every creator.</p>
+      </div>
 
-      {/* Main navigation available to everyone */}
-      <nav style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
-        <Link to="/products">View Products</Link>
-      </nav>
-
-      <hr />
-
-      {/* 2. Use a ternary operator to render content conditionally */}
-      {user ? (
-        // This view is shown IF a user is logged in
-        <div>
-          <p>
-            You are logged in as: <strong>{user.email}</strong>
-          </p>
-          <nav style={{ display: "flex", gap: "1rem" }}>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/cart">View Cart</Link> {/* Add this link */}
-            <button onClick={logout}>Logout</button>
-          </nav>
+      {/* --- New Search & Filter Bar --- */}
+      <div className="search-filter-bar">
+        <div className="filter-select category-select">
+          <Select
+            isMulti
+            options={categoryOptions}
+            placeholder="Select Category..."
+            className="react-select-container"
+            classNamePrefix="react-select"
+            isLoading={isLoadingCategories}
+          />
         </div>
-      ) : (
-        // This view is shown IF there is no user
-        <nav style={{ display: "flex", gap: "1rem" }}>
-          <Link to="/register">Register</Link>
-          <Link to="/login">Login</Link>
-        </nav>
-      )}
+        <div className="filter-select brand-select">
+          <Select
+            isMulti
+            options={brandOptions}
+            placeholder="Select Brand..."
+            className="react-select-container"
+            classNamePrefix="react-select"
+            isLoading={isLoadingBrands}
+          />
+        </div>
+        <div className="search-input-container">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search for a product..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          />
+          <button className="search-button" onClick={handleSearch}>
+            <FiSearch size={20} />
+          </button>
+        </div>
+      </div>
+
+      <div className="home__content">{/* Product grid will go here */}</div>
     </div>
   );
 };

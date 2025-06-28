@@ -276,3 +276,35 @@ func (env *Env) deleteProductHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
 
 }
+
+
+// getUniqueBrandsHandler returns a list of all unique brand names.
+func (env *Env) getUniqueBrandsHandler(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	// The "distinct" command finds the unique values for a specified field.
+	brands, err := env.collection.Distinct(ctx, "brand", bson.D{})
+	if err != nil {
+		http.Error(w, "Failed to fetch brands", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(brands)
+}
+
+// getUniqueCategoriesHandler returns a list of all unique category names.
+func (env *Env) getUniqueCategoriesHandler(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	categories, err := env.collection.Distinct(ctx, "category", bson.D{})
+	if err != nil {
+		http.Error(w, "Failed to fetch categories", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(categories)
+}

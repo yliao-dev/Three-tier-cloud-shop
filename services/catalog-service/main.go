@@ -52,6 +52,8 @@ func main() {
 	// Public "read" endpoints - NO middleware
 	mux.HandleFunc("GET /api/products", env.getProductsHandler)
 	mux.HandleFunc("GET /api/products/{id}", env.getProductByIDHandler)
+	mux.HandleFunc("GET /api/products/brands", env.getUniqueBrandsHandler)
+	mux.HandleFunc("GET /api/products/categories", env.getUniqueCategoriesHandler)
 	mux.HandleFunc("GET /api/products/sku/{sku}", env.getProductBySKUHandler)
 	mux.HandleFunc("POST /api/products/batch-get", env.batchGetProductsBySKUHandler)
 

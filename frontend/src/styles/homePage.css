@@ -2,16 +2,110 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 5rem 2rem;
+  /* justify-content: center; */ /* We want content at the top */
+  min-height: calc(100vh - 65px); /* Full height minus topbar */
+  padding: 4rem 2rem;
   box-sizing: border-box;
+  background-color: #f9fafb;
 }
 
 .home__intro {
   display: flex;
   text-align: center;
   flex-direction: column;
-  margin-top: auto;
-  gap: 2rem;
+  gap: 0.5rem;
+  margin-bottom: 3rem;
+}
+
+.home__intro h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: -1px;
+}
+
+.home__intro p {
+  font-size: 1.125rem;
+  color: #6b7280;
+  max-width: 600px;
+}
+
+/* --- Search & Filter Bar Styles --- */
+.search-filter-bar {
+  display: flex;
+  width: 100%;
+  max-width: 900px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  height: 56px;
+}
+
+.filter-select {
+  flex-grow: 1;
+  border-right: 1px solid #e5e7eb;
+}
+
+.search-input-container {
+  flex-grow: 2;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0 1rem;
+  font-size: 1rem;
+  color: #111827;
+  background-color: transparent;
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.search-button {
+  height: 100%;
+  border: none;
+  background-color: #4f46e5; /* A nice indigo color */
+  color: white;
+  padding: 0 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.search-button:hover {
+  background-color: #4338ca;
+}
+
+/* --- React-Select Custom Styles --- */
+.react-select-container {
+  width: 100%;
+  height: 100%;
+}
+
+.react-select__control {
+  height: 100% !important;
+  border: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  cursor: pointer;
+}
+
+.react-select__placeholder {
+  color: #6b7280 !important;
+}
+
+.react-select__indicator-separator {
+  display: none !important;
 }
