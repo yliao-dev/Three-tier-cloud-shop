@@ -10,6 +10,9 @@
 @import "./ProductCatalogPage.css";
 @import "./pagination.css";
 
+@import "./cartItemCard.css";
+@import "./cartPage.css";
+
 @import "./loginPage.css";
 @import "./registerPage";
 
