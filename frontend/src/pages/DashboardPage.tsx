@@ -20,10 +20,12 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard-page">
-      <header className="dashboard-header">
-        <h1>Welcome, {user?.username || "Valued Customer"}!</h1>
-        <p>Here's a summary of your account activity.</p>
-      </header>
+      <section>
+        <header className="dashboard-header">
+          <h1>Welcome, {user?.username || "Valued Customer"}!</h1>
+          <p>Here's a summary of your account activity.</p>
+        </header>
+      </section>
 
       <section className="dashboard-stats">
         <div className="stat-card">

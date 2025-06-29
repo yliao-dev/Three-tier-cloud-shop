@@ -1,8 +1,11 @@
 @import "./variables.css";
 
+@import "./error-page.css";
+
 @import "./home-page.css";
 
 @import "./user/dashboard-page.css";
+@import "./user/orders-page.css";
 @import "./user/login-page.css";
 @import "./user/register-page";
 @import "./user/top-bar.css";

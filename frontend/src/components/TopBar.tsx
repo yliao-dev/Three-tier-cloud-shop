@@ -64,9 +64,8 @@ const TopBar = () => {
           <Link to="/products" onClick={() => setIsPanelOpen(false)}>
             Products
           </Link>
-
-          <Link to="/products" onClick={() => setIsPanelOpen(false)}>
-            Products
+          <Link to="/orders" onClick={() => setIsPanelOpen(false)}>
+            Orders
           </Link>
         </nav>
       </div>

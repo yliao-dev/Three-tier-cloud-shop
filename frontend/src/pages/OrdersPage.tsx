@@ -1,8 +1,6 @@
-import { useAuthContext } from "../context/AuthContext";
 import { useOrders } from "../hooks/useOrders";
 
 const OrdersPage = () => {
-  const { user } = useAuthContext();
   const { orders, isLoading } = useOrders();
 
   if (isLoading) {
@@ -11,13 +9,11 @@ const OrdersPage = () => {
 
   return (
     <>
-      <div>
-        <header className="orders-header">
-          <h1>Welcome, {user?.username || "Valued Customer"}!</h1>
-          <p>Here's a summary of your order history.</p>
-        </header>
-
-        <section className="dashboard-recent-orders">
+      <div className="orders-page">
+        <section>
+          <header>
+            <h2>Here's a summary of your order history.</h2>
+          </header>
           <h2>Recent Orders</h2>
           {orders && orders.length > 0 ? (
             <div className="orders-table-container">

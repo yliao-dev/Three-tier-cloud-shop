@@ -1,9 +1,11 @@
 .dashboard-page {
   width: 100%;
-  max-width: 75rem; /* 1200px */
+  max-width: 75rem;
   margin: 0 auto;
   padding: 2rem;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
 }
 
 .dashboard-header {
@@ -50,70 +52,4 @@
   font-size: 1rem;
   color: var(--subtext);
   font-weight: 500;
-}
-
-.dashboard-recent-orders h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-}
-
-.orders-table-container {
-  background-color: var(--white);
-  border: 1px solid var(--boarder-white);
-  border-radius: 0.75rem;
-  overflow: hidden;
-}
-
-.orders-table-container table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.orders-table-container th,
-.orders-table-container td {
-  padding: 1rem 1.5rem;
-  text-align: left;
-  border-bottom: 1px solid var(--boarder-white);
-}
-
-.orders-table-container th {
-  background-color: #f9fafb;
-  font-size: 0.875rem;
-  color: var(--subtext);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.orders-table-container tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.order-id {
-  font-family: monospace;
-  color: var(--primary-blue);
-}
-
-.status-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-.status-badge.status-paid {
-  background-color: #dcfce7; /* Green */
-  color: #166534;
-}
-
-.status-badge.status-shipped {
-  background-color: #dbeafe; /* Blue */
-  color: #1e40af;
-}
-
-.status-badge.status-delivered {
-  background-color: #e5e7eb; /* Gray */
-  color: #374151;
 }
