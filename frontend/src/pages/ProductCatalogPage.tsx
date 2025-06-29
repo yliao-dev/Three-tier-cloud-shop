@@ -9,21 +9,18 @@ import Pagination from "../components/Pagination";
 
 const ITEMS_PER_PAGE = 20;
 
-// Define the shape of the paginated API response
 interface PaginatedProductsResponse {
   products: Product[];
   totalPages: number;
   currentPage: number;
 }
 
-// Define the shape of our search state object
 interface SearchState {
   query: string;
   category: string | null;
   brand: string | null;
 }
 
-// The fetch function now accepts the new SearchState
 const fetchProducts = async (
   page: number,
   params: SearchState
@@ -33,7 +30,6 @@ const fetchProducts = async (
     limit: String(ITEMS_PER_PAGE),
   });
 
-  // Dynamically add parameters to the URL if they exist
   if (params.query) {
     queryParams.append("search", params.query);
   }
@@ -44,9 +40,13 @@ const fetchProducts = async (
     queryParams.append("category", params.category);
   }
 
-  const response = await apiClient.get<PaginatedProductsResponse>(
-    `/products?${queryParams.toString()}`
-  );
+  const requestUrl = `/products?${queryParams.toString()}`;
+
+  // --- LOG THE API REQUEST URL ---
+  console.log("Making API request to:", requestUrl);
+  // ---
+
+  const response = await apiClient.get<PaginatedProductsResponse>(requestUrl);
   return response.data;
 };
 
@@ -54,7 +54,6 @@ const ProductCatalogPage = () => {
   const navigate = useNavigate();
   const { pageNumber } = useParams();
 
-  // The state now uses the simpler SearchState with strings/null
   const [searchState, setSearchState] = useState<SearchState>({
     query: "",
     category: null,
@@ -63,9 +62,13 @@ const ProductCatalogPage = () => {
 
   const currentPage = parseInt(pageNumber || "1", 10);
 
-  // The queryKey correctly includes the searchState object
+  // --- LOG THE REACT QUERY KEY ---
+  const queryKey = ["products", currentPage, searchState];
+  console.log("React Query Key:", queryKey);
+  // ---
+
   const { data, isLoading, error } = useQuery<PaginatedProductsResponse>({
-    queryKey: ["products", currentPage, searchState],
+    queryKey: queryKey, // Use the key we just logged
     queryFn: () => fetchProducts(currentPage, searchState),
     placeholderData: keepPreviousData,
   });
@@ -78,7 +81,6 @@ const ProductCatalogPage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // The handler now directly accepts the new state from the child component
   const handleSearch = (params: SearchState) => {
     setSearchState(params);
     if (currentPage !== 1) {
