@@ -1,21 +1,20 @@
 @import "./variables.css";
-@import "./topBar.css";
 
-@import "./homePage.css";
-@import "./searchFilters.css";
-@import "./checkboxDropdown.css";
-@import "./FilterSelect.css";
+@import "./home-page.css";
 
-@import "./DashboardPage.css";
-@import "./ProductCard.css";
-@import "./ProductCatalogPage.css";
-@import "./pagination.css";
+@import "./user/dashboard-page.css";
+@import "./user/login-page.css";
+@import "./user/register-page";
+@import "./user/top-bar.css";
 
-@import "./cartItemCard.css";
-@import "./cartPage.css";
+@import "./product-catalog/search-filters.css";
+@import "./product-catalog/filter-select.css";
+@import "./product-catalog/product-card.css";
+@import "./product-catalog/product-catalog-page.css";
+@import "./product-catalog/pagination.css";
 
-@import "./loginPage.css";
-@import "./registerPage";
+@import "./cart/cart-item-card.css";
+@import "./cart/cart-page.css";
 
 @tailwind base;
 @tailwind components;
