@@ -1,15 +1,17 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../api/client";
 import FilterSelect from "./FilterSelect";
 
+interface SearchParams {
+  query: string;
+  category: string | null;
+  brand: string | null;
+}
+
 interface Props {
-  onSearch: (params: {
-    query: string;
-    category: string | null;
-    brand: string | null;
-  }) => void;
+  onSearch: (params: SearchParams) => void;
 }
 
 const fetchBrands = async (): Promise<string[]> => {
@@ -25,7 +27,7 @@ const fetchCategories = async (): Promise<string[]> => {
 const formatOptions = (items: string[] | undefined) => {
   if (!items) return [];
   return items.map((item) => ({
-    value: item.toLowerCase().replace(/ /g, "-"),
+    value: item,
     label: item,
   }));
 };
@@ -51,18 +53,14 @@ const SearchFilters = ({ onSearch }: Props) => {
     [categories]
   );
 
-  // This useEffect hook automatically triggers a search when a filter changes
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onSearch({
-        query: searchQuery,
-        category: selectedCategory,
-        brand: selectedBrand,
-      });
-    }, 500); // Debounce for 500ms
-
-    return () => clearTimeout(timer);
-  }, [searchQuery, selectedCategory, selectedBrand, onSearch]);
+  // This function is now only called by user actions.
+  const handleTriggerSearch = () => {
+    onSearch({
+      query: searchQuery,
+      category: selectedCategory,
+      brand: selectedBrand,
+    });
+  };
 
   return (
     <section className="home__search-bar">
@@ -93,17 +91,13 @@ const SearchFilters = ({ onSearch }: Props) => {
           placeholder="Search for a product..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleTriggerSearch();
+            }
+          }}
         />
-        <button
-          className="home__search-button"
-          onClick={() =>
-            onSearch({
-              query: searchQuery,
-              category: selectedCategory,
-              brand: selectedBrand,
-            })
-          }
-        >
+        <button className="home__search-button" onClick={handleTriggerSearch}>
           <FiSearch size="1.25rem" />
         </button>
       </div>

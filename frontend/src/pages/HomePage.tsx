@@ -1,20 +1,8 @@
 import { Link } from "react-router-dom";
-import SearchFilters from "../components/SearchFilters";
-
-interface SearchParams {
-  query: string;
-  category: string | null;
-  brand: string | null;
-}
 
 const HomePage = () => {
-  const handleSearch = (params: SearchParams) => {
-    console.log("Searching for:", params);
-  };
-
   return (
     <div className="home__page">
-      <SearchFilters onSearch={handleSearch} />
       <section className="home__content">
         <section className="hero-container">
           {/* The background image */}
