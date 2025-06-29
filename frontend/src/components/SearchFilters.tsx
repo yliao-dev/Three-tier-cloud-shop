@@ -1,15 +1,14 @@
-// src/components/SearchFilters.tsx
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { FiSearch } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../api/client";
-import CheckboxDropdown from "./CheckboxDropdown";
+import FilterSelect from "./FilterSelect";
 
 interface Props {
   onSearch: (params: {
     query: string;
-    categories: string[];
-    brands: string[];
+    category: string | null;
+    brand: string | null;
   }) => void;
 }
 
@@ -33,10 +32,8 @@ const formatOptions = (items: string[] | undefined) => {
 
 const SearchFilters = ({ onSearch }: Props) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState(
-    () => new Set<string>()
-  );
-  const [selectedBrands, setSelectedBrands] = useState(() => new Set<string>());
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
 
   const { data: brands, isLoading: isLoadingBrands } = useQuery({
     queryKey: ["brands"],
@@ -54,32 +51,37 @@ const SearchFilters = ({ onSearch }: Props) => {
     [categories]
   );
 
-  const handleSearch = () => {
-    onSearch({
-      query: searchQuery,
-      categories: Array.from(selectedCategories),
-      brands: Array.from(selectedBrands),
-    });
-  };
+  // This useEffect hook automatically triggers a search when a filter changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onSearch({
+        query: searchQuery,
+        category: selectedCategory,
+        brand: selectedBrand,
+      });
+    }, 500); // Debounce for 500ms
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, selectedCategory, selectedBrand, onSearch]);
 
   return (
     <section className="home__search-bar">
       <div className="home__filter-container">
-        <CheckboxDropdown
+        <FilterSelect
           placeholder="Category"
           options={categoryOptions}
-          selected={selectedCategories}
-          onChange={setSelectedCategories}
+          value={selectedCategory}
+          onChange={setSelectedCategory}
           isLoading={isLoadingCategories}
         />
       </div>
 
       <div className="home__filter-container">
-        <CheckboxDropdown
+        <FilterSelect
           placeholder="Brand"
           options={brandOptions}
-          selected={selectedBrands}
-          onChange={setSelectedBrands}
+          value={selectedBrand}
+          onChange={setSelectedBrand}
           isLoading={isLoadingBrands}
         />
       </div>
@@ -91,10 +93,18 @@ const SearchFilters = ({ onSearch }: Props) => {
           placeholder="Search for a product..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
-        <button className="home__search-button" onClick={handleSearch}>
-          <FiSearch size={20} />
+        <button
+          className="home__search-button"
+          onClick={() =>
+            onSearch({
+              query: searchQuery,
+              category: selectedCategory,
+              brand: selectedBrand,
+            })
+          }
+        >
+          <FiSearch size="1.25rem" />
         </button>
       </div>
     </section>

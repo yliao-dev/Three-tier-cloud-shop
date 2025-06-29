@@ -8,6 +8,7 @@ import (
 	"math"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -40,44 +41,67 @@ func (env *Env) getAllProductsHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(products)
 }
 
-
-
+// getProductsHandler now supports filtering, searching, and pagination.
 func (env *Env) getProductsHandler(w http.ResponseWriter, r *http.Request) {
-	// 1. Parse 'page' and 'limit' query parameters from the URL.
-	pageStr := r.URL.Query().Get("page")
-	limitStr := r.URL.Query().Get("limit")
+	// --- 1. Parse Query Parameters ---
+	queryValues := r.URL.Query()
+	pageStr := queryValues.Get("page")
+	limitStr := queryValues.Get("limit")
+	searchQuery := queryValues.Get("search")
+	brandsQuery := queryValues.Get("brand")
+	categoriesQuery := queryValues.Get("category")
 
-	page, err := strconv.ParseInt(pageStr, 10, 64)
-	if err != nil || page < 1 {
-		page = 1 // Default to page 1 if invalid
+	page, _ := strconv.ParseInt(pageStr, 10, 64)
+	if page < 1 {
+		page = 1
 	}
 
-	limit, err := strconv.ParseInt(limitStr, 10, 64)
-	if err != nil || limit < 1 {
-		limit = 20 // Default to 20 items per page
+	limit, _ := strconv.ParseInt(limitStr, 10, 64)
+	if limit < 1 {
+		limit = 20
 	}
 
-	// 2. Calculate the number of documents to skip.
 	skip := (page - 1) * limit
+
+	// --- 2. Build Dynamic MongoDB Filter ---
+	// Start with an empty filter that matches everything.
+	filter := bson.M{}
+
+	// Add conditions to the filter only if the query params exist.
+	if searchQuery != "" {
+		// Use $regex for a case-insensitive "contains" search on the name.
+		filter["name"] = bson.M{"$regex": searchQuery, "$options": "i"}
+	}
+	if brandsQuery != "" {
+		// Split the comma-separated string into a slice.
+		brands := strings.Split(brandsQuery, ",")
+		// Use the $in operator to match any brand in the list.
+		filter["brand"] = bson.M{"$in": brands}
+	}
+	if categoriesQuery != "" {
+		categories := strings.Split(categoriesQuery, ",")
+		filter["category"] = bson.M{"$in": categories}
+	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	// 3. Get the total count of documents for calculating total pages.
-	totalDocs, err := env.collection.CountDocuments(ctx, bson.D{})
+	// --- 3. Execute Queries ---
+	// Get the total count of documents that MATCH THE FILTER.
+	totalDocs, err := env.collection.CountDocuments(ctx, filter)
 	if err != nil {
 		http.Error(w, "Failed to count documents", http.StatusInternalServerError)
 		return
 	}
 
-	// 4. Set up options for the Find query (limit, skip, sort).
+	// Set up options for the Find query (limit, skip, sort).
 	findOptions := options.Find()
 	findOptions.SetLimit(limit)
 	findOptions.SetSkip(skip)
-	findOptions.SetSort(bson.D{{Key: "name", Value: 1}}) // Sort by name alphabetically
+	findOptions.SetSort(bson.D{{Key: "name", Value: 1}})
 
-	// 5. Execute the Find query to get the documents for the current page.
-	cursor, err := env.collection.Find(ctx, bson.D{}, findOptions)
+	// Execute the Find query WITH THE FILTER to get the documents for the current page.
+	cursor, err := env.collection.Find(ctx, filter, findOptions)
 	if err != nil {
 		http.Error(w, "Failed to fetch products", http.StatusInternalServerError)
 		return
@@ -90,7 +114,7 @@ func (env *Env) getProductsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 6. Create the structured response.
+	// --- 4. Create and Send Response ---
 	response := PaginatedProductsResponse{
 		Products:    products,
 		CurrentPage: page,
@@ -101,7 +125,6 @@ func (env *Env) getProductsHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
 }
-
 func (env *Env) getProductByIDHandler(w http.ResponseWriter, r *http.Request) {
 	// Get the ID from the URL path.
 	productIDString := r.PathValue("id")

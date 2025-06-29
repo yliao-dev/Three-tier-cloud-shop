@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import SearchFilters from "../components/SearchFilters";
 
+interface SearchParams {
+  query: string;
+  category: string | null;
+  brand: string | null;
+}
+
 const HomePage = () => {
-  const handleSearch = (params: {
-    query: string;
-    categories: string[];
-    brands: string[];
-  }) => {
+  const handleSearch = (params: SearchParams) => {
     console.log("Searching for:", params);
   };
 
