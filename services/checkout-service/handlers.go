@@ -191,7 +191,7 @@ func (env *Env) getOrdersForUserHandler(w http.ResponseWriter, r *http.Request) 
 	filter := bson.M{"userEmail": userEmail}
 	
 	// Optional but recommended: Sort the results by creation date, newest first.
-	opts := options.Find().SetSort(bson.D{{"createdAt", -1}})
+	opts := options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}})
 
 	// 4. Execute the query.
 	cursor, err := collection.Find(ctx, filter, opts)

@@ -4,7 +4,7 @@ import { useCart } from "../hooks/useCart";
 import { useAuthContext } from "../context/AuthContext";
 import { FiLogOut, FiSettings, FiShoppingCart } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
-import { RiMenu2Fill, RiCloseFill } from "react-icons/ri";
+import { RiMenu2Fill, RiCloseFill, RiHistoryFill } from "react-icons/ri";
 
 const TopBar = () => {
   const { cart } = useCart();
@@ -122,11 +122,11 @@ const TopBar = () => {
                 </Link>
 
                 <Link
-                  to="/hisotry"
+                  to="/orders"
                   className="dropdown-item"
                   onClick={() => setIsProfileOpen(false)}
                 >
-                  <FiSettings className="item-icon" />
+                  <RiHistoryFill className="item-icon" />
                   Order History
                 </Link>
 

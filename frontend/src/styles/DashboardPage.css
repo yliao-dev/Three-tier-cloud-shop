@@ -12,7 +12,7 @@
 
 .dashboard-header h1 {
   font-size: 2.25rem;
-  font-weight: 800;
+  font-weight: var(--font-weight-bold);
   margin: 0 0 0.5rem 0;
   color: var(--text);
 }
@@ -41,7 +41,6 @@
 
 .stat-value {
   font-size: 2.25rem;
-  font-weight: 800;
   color: var(--primary-blue);
   line-height: 1;
 }
@@ -81,7 +80,6 @@
 .orders-table-container th {
   background-color: #f9fafb;
   font-size: 0.875rem;
-  font-weight: 600;
   color: var(--subtext);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -94,11 +92,6 @@
 .order-id {
   font-family: monospace;
   color: var(--primary-blue);
-  font-weight: 600;
-}
-
-.order-total {
-  font-weight: 600;
 }
 
 .status-badge {
