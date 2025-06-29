@@ -23,7 +23,6 @@
 
 .catalog__product-grid {
   display: grid;
-  width: 70%;
-  grid-template-columns: repeat(auto-fill, minmax(18rem, 2fr));
+  width: 90%;
   gap: 2rem;
 }

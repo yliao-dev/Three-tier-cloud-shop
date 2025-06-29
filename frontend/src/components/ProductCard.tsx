@@ -19,11 +19,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
         />
       </div>
 
-      {/* Info group on the right */}
       <div className="product-card__info">
         <div>
           <p className="product-card__category">{product.category}</p>
           <h3 className="product-card__name">{product.name}</h3>
+          <p className="product-card__description">{product.description}</p>
         </div>
         <div className="product-card__actions">
           <p className="product-card__price">${product.price.toFixed(2)}</p>
