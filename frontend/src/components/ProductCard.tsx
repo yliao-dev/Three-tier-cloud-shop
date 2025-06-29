@@ -1,6 +1,8 @@
 import type { Product } from "../types/product";
 import { useCart } from "../hooks/useCart";
 import { FiPlus } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
 
 type ProductCardProps = {
   product: Product;
@@ -8,6 +10,16 @@ type ProductCardProps = {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addItem, isAddingItem } = useCart();
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
+
+  const handleAddToCart = () => {
+    if (user) {
+      addItem(product.sku);
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <div className="product-card">
@@ -29,7 +41,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <p className="product-card__price">${product.price.toFixed(2)}</p>
           <button
             className="product-card__add-button"
-            onClick={() => addItem(product.sku)}
+            onClick={handleAddToCart}
             disabled={isAddingItem}
             aria-label="Add to Cart"
           >

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import apiClient from "../api/client";
 import { useAuthContext } from "../context/AuthContext"; // We will create this next
 import type { AuthResponse, AuthCredentials } from "../types/auth";
+import toast from "react-hot-toast";
 
 export const useAuth = () => {
   const { login: setTokenInContext } = useAuthContext();
@@ -33,7 +34,7 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       setTokenInContext(data.token);
-      alert("Registration successful! You are now logged in.");
+      toast.success("Registration successful! You are now logged in");
       navigate("/");
     },
   });

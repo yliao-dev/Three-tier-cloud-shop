@@ -5,6 +5,8 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
+import { Toaster } from "react-hot-toast";
+
 import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
 import MainLayout from "./components/layouts/MainLayout";
@@ -42,6 +44,7 @@ const App = () => {
   );
   return (
     <>
+      <Toaster position="bottom-center" />
       <RouterProvider router={router} />
     </>
   );

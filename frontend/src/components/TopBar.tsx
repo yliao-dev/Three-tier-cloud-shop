@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
 import { useAuthContext } from "../context/AuthContext";
-import { FiLogOut, FiSettings, FiShoppingCart } from "react-icons/fi";
+import { FiLogOut, FiSettings, FiShoppingCart, FiUser } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
 import { RiMenu2Fill, RiCloseFill, RiHistoryFill } from "react-icons/ri";
+import { ImProfile } from "react-icons/im";
 
 const TopBar = () => {
   const { cart } = useCart();
@@ -96,18 +97,16 @@ const TopBar = () => {
                 className="top-bar-icon-button"
                 aria-label="Profile"
               >
-                <CgProfile size={30} />
+                <FiUser size={30} />
               </button>
               <div
                 className={`profile-dropdown ${isProfileOpen ? "open" : ""}`}
               >
                 <div className="profile-dropdown-header">
-                  {/* The new icon replaces the img tag */}
-                  <img
-                    src={`https://i.pravatar.cc/1?u=${user.email}`}
-                    alt="User Avatar"
-                    className="profile-avatar"
-                  />
+                  {/* The new icon wrapper replaces the img tag */}
+                  <div className="profile-avatar-icon">
+                    <CgProfile size={24} />
+                  </div>
                   <div className="user-info">
                     <span className="name">
                       {user.username || "Valued Customer"}
@@ -120,7 +119,7 @@ const TopBar = () => {
                   className="dropdown-item"
                   onClick={() => setIsProfileOpen(false)}
                 >
-                  <CgProfile className="item-icon" />
+                  <ImProfile className="item-icon" />
                   View Profile
                 </Link>
 
