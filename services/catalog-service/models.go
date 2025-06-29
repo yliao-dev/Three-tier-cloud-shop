@@ -21,12 +21,13 @@ type Product struct {
 	Category    string             `json:"category" bson:"category"`
 }
 
-// PaginatedProductsResponse is the new structure for our API response.
 type PaginatedProductsResponse struct {
-	Products    []Product `json:"products"`
-	TotalPages  int64     `json:"totalPages"`
-	CurrentPage int64     `json:"currentPage"`
+	Products      []Product `json:"products"`
+	TotalPages    int64     `json:"totalPages"`
+	CurrentPage   int64     `json:"currentPage"`
+	TotalProducts int64     `json:"totalProducts"`
 }
 
 type ContextKey string
 const UserEmailKey ContextKey = "userEmail"
+

@@ -116,9 +116,10 @@ func (env *Env) getProductsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// --- 4. Create and Send Response ---
 	response := PaginatedProductsResponse{
-		Products:    products,
-		CurrentPage: page,
-		TotalPages:  int64(math.Ceil(float64(totalDocs) / float64(limit))),
+		Products:      products,
+		CurrentPage:   page,
+		TotalPages:    int64(math.Ceil(float64(totalDocs) / float64(limit))),
+		TotalProducts: totalDocs,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

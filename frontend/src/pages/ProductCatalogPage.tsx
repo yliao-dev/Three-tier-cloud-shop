@@ -13,6 +13,7 @@ interface PaginatedProductsResponse {
   products: Product[];
   totalPages: number;
   currentPage: number;
+  totalProducts: number;
 }
 
 interface SearchState {
@@ -41,10 +42,7 @@ const fetchProducts = async (
   }
 
   const requestUrl = `/products?${queryParams.toString()}`;
-
-  // --- LOG THE API REQUEST URL ---
   console.log("Making API request to:", requestUrl);
-  // ---
 
   const response = await apiClient.get<PaginatedProductsResponse>(requestUrl);
   return response.data;
@@ -54,6 +52,7 @@ const ProductCatalogPage = () => {
   const navigate = useNavigate();
   const { pageNumber } = useParams();
 
+  // --- State and Handlers must be defined at the top ---
   const [searchState, setSearchState] = useState<SearchState>({
     query: "",
     category: null,
@@ -62,40 +61,59 @@ const ProductCatalogPage = () => {
 
   const currentPage = parseInt(pageNumber || "1", 10);
 
-  // --- LOG THE REACT QUERY KEY ---
-  const queryKey = ["products", currentPage, searchState];
-  console.log("React Query Key:", queryKey);
-  // ---
-
-  const { data, isLoading, error } = useQuery<PaginatedProductsResponse>({
-    queryKey: queryKey, // Use the key we just logged
-    queryFn: () => fetchProducts(currentPage, searchState),
-    placeholderData: keepPreviousData,
-  });
-
-  const products = data?.products;
-  const totalPages = data?.totalPages || 1;
-
   const handlePageChange = (page: number) => {
-    navigate(`/products/page/${page}`);
+    const queryParams = new URLSearchParams();
+    if (searchState.query) queryParams.append("query", searchState.query);
+    if (searchState.brand) queryParams.append("brand", searchState.brand);
+    if (searchState.category)
+      queryParams.append("category", searchState.category);
+
+    navigate(`/products/page/${page}?${queryParams.toString()}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleSearch = (params: SearchState) => {
     setSearchState(params);
     if (currentPage !== 1) {
-      navigate("/products/page/1");
+      const queryParams = new URLSearchParams();
+      if (params.query) queryParams.append("query", params.query);
+      if (params.brand) queryParams.append("brand", params.brand);
+      if (params.category) queryParams.append("category", params.category);
+
+      navigate(`/products/page/1?${queryParams.toString()}`);
     }
   };
+  // --- End of definitions ---
+
+  const { data, isLoading, error, isFetching } =
+    useQuery<PaginatedProductsResponse>({
+      queryKey: ["products", currentPage, searchState],
+      queryFn: () => fetchProducts(currentPage, searchState),
+      placeholderData: keepPreviousData,
+    });
+
+  const products = data?.products;
+  const totalPages = data?.totalPages || 1;
+  const totalProducts = data?.totalProducts || 0;
 
   return (
     <div className="catalog__page">
+      <div className={`loading-bar ${isFetching ? "loading" : ""}`}></div>
+
       <header className="catalog__header">
         <h1>All Products</h1>
         <p>Browse our curated selection of professional cameras and lenses.</p>
       </header>
 
-      <SearchFilters onSearch={handleSearch} />
+      <SearchFilters onSearch={handleSearch} initialState={searchState} />
+
+      <div className="catalog__results-summary">
+        {!isLoading && (
+          <p>
+            Showing {products?.length || 0} of {totalProducts} results.
+          </p>
+        )}
+      </div>
 
       <section className="catalog__product-grid">
         {isLoading && <p>Loading...</p>}

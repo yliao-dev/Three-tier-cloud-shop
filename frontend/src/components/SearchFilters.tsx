@@ -12,6 +12,7 @@ interface SearchParams {
 
 interface Props {
   onSearch: (params: SearchParams) => void;
+  initialState?: Partial<SearchParams>;
 }
 
 const fetchBrands = async (): Promise<string[]> => {
@@ -32,10 +33,14 @@ const formatOptions = (items: string[] | undefined) => {
   }));
 };
 
-const SearchFilters = ({ onSearch }: Props) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+const SearchFilters = ({ onSearch, initialState = {} }: Props) => {
+  const [searchQuery, setSearchQuery] = useState(initialState.query || "");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    initialState.category || null
+  );
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(
+    initialState.brand || null
+  );
 
   const { data: brands, isLoading: isLoadingBrands } = useQuery({
     queryKey: ["brands"],
