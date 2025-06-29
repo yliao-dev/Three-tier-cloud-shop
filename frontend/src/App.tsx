@@ -23,7 +23,11 @@ const App = () => {
         <Route index element={<HomePage />} />
         <Route path="register" element={<RegisterPage />} />
         <Route path="login" element={<LoginPage />} />
-        <Route path="products" element={<ProductCatalogPage />} />{" "}
+        <Route path="products" element={<ProductCatalogPage />} />
+        <Route
+          path="/products/page/:pageNumber"
+          element={<ProductCatalogPage />}
+        />
         {/* 2. Add the route */}
         <Route path="*" element={<ErrorPage />} />
         {/* Protected Routes */}

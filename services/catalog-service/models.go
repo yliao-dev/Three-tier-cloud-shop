@@ -5,23 +5,28 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// Env holds dependencies, making them available to handlers.
+// Env holds the 'products' collection handle.
 type Env struct {
 	collection *mongo.Collection
 }
 
+// Product struct now includes all fields from our seed data.
 type Product struct {
-    ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-    Name        string             `json:"name" bson:"name"`
-    Description string             `json:"description" bson:"description"`
-    Price       float64            `json:"price" bson:"price"`
-    SKU         string             `json:"sku" bson:"sku"`
-    Brand       string             `json:"brand" bson:"brand"`
-    Category    string            `json:"category" bson:"category"`
+	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Name        string             `json:"name" bson:"name"`
+	Description string             `json:"description" bson:"description"`
+	SKU         string             `json:"sku" bson:"sku"`
+	Price       float64            `json:"price" bson:"price"`
+	Brand       string             `json:"brand" bson:"brand"`
+	Category    string             `json:"category" bson:"category"`
 }
 
-// contextKey is a custom type to avoid key collisions in context.
-type contextKey string
+// PaginatedProductsResponse is the new structure for our API response.
+type PaginatedProductsResponse struct {
+	Products    []Product `json:"products"`
+	TotalPages  int64     `json:"totalPages"`
+	CurrentPage int64     `json:"currentPage"`
+}
 
-// UserEmailKey is the key for the user's email in the request context.
-const UserEmailKey contextKey = "userEmail"
+type ContextKey string
+const UserEmailKey ContextKey = "userEmail"

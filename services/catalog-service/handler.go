@@ -5,44 +5,101 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
+	"math"
 	"net/http"
+	"strconv"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// getProductsHandler fetches all products from the database.
-func (env *Env) getProductsHandler(w http.ResponseWriter, r *http.Request) {
-	// An empty filter `bson.D{}` will match all documents in the collection.
+// getAllProductsHandler returns the complete list of all products without pagination.
+func (env *Env) getAllProductsHandler(w http.ResponseWriter, r *http.Request) {
 	cursor, err := env.collection.Find(context.TODO(), bson.D{})
 	if err != nil {
-		log.Printf("Error finding products: %v", err)
 		http.Error(w, "Failed to fetch products", http.StatusInternalServerError)
 		return
 	}
 	defer cursor.Close(context.TODO())
 
-	// Decode the database results into a slice of Product structs.
 	var products []Product
 	if err = cursor.All(context.TODO(), &products); err != nil {
-		log.Printf("Error decoding products: %v", err)
 		http.Error(w, "Failed to decode products", http.StatusInternalServerError)
 		return
 	}
 
-	// It's a best practice to return an empty JSON array `[]` instead of `null`
-	// if no documents are found.
 	if products == nil {
 		products = make([]Product, 0)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(products); err != nil {
-		log.Printf("Error encoding products to JSON: %v", err)
+	json.NewEncoder(w).Encode(products)
+}
+
+
+
+func (env *Env) getProductsHandler(w http.ResponseWriter, r *http.Request) {
+	// 1. Parse 'page' and 'limit' query parameters from the URL.
+	pageStr := r.URL.Query().Get("page")
+	limitStr := r.URL.Query().Get("limit")
+
+	page, err := strconv.ParseInt(pageStr, 10, 64)
+	if err != nil || page < 1 {
+		page = 1 // Default to page 1 if invalid
 	}
+
+	limit, err := strconv.ParseInt(limitStr, 10, 64)
+	if err != nil || limit < 1 {
+		limit = 20 // Default to 20 items per page
+	}
+
+	// 2. Calculate the number of documents to skip.
+	skip := (page - 1) * limit
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	// 3. Get the total count of documents for calculating total pages.
+	totalDocs, err := env.collection.CountDocuments(ctx, bson.D{})
+	if err != nil {
+		http.Error(w, "Failed to count documents", http.StatusInternalServerError)
+		return
+	}
+
+	// 4. Set up options for the Find query (limit, skip, sort).
+	findOptions := options.Find()
+	findOptions.SetLimit(limit)
+	findOptions.SetSkip(skip)
+	findOptions.SetSort(bson.D{{Key: "name", Value: 1}}) // Sort by name alphabetically
+
+	// 5. Execute the Find query to get the documents for the current page.
+	cursor, err := env.collection.Find(ctx, bson.D{}, findOptions)
+	if err != nil {
+		http.Error(w, "Failed to fetch products", http.StatusInternalServerError)
+		return
+	}
+	defer cursor.Close(ctx)
+
+	var products []Product
+	if err = cursor.All(ctx, &products); err != nil {
+		http.Error(w, "Failed to decode products", http.StatusInternalServerError)
+		return
+	}
+
+	// 6. Create the structured response.
+	response := PaginatedProductsResponse{
+		Products:    products,
+		CurrentPage: page,
+		TotalPages:  int64(math.Ceil(float64(totalDocs) / float64(limit))),
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response)
 }
 
 func (env *Env) getProductByIDHandler(w http.ResponseWriter, r *http.Request) {

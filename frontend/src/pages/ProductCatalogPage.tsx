@@ -1,76 +1,54 @@
-import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useParams, useNavigate } from "react-router-dom";
 import apiClient from "../api/client";
 import ProductCard from "../components/ProductCard";
 import type { Product } from "../types/product";
 import SearchFilters from "../components/SearchFilters";
+import Pagination from "../components/Pagination";
 
-const handleSearch = (params: {
-  query: string;
-  categories: string[];
-  brands: string[];
-}) => {
-  console.log("Searching for:", params);
-};
+const ITEMS_PER_PAGE = 20;
 
-const fetchAllProducts = async (): Promise<Product[]> => {
-  const response = await apiClient.get<Product[]>("/products");
+interface PaginatedProductsResponse {
+  products: Product[];
+  totalPages: number;
+  currentPage: number;
+}
+
+const fetchPaginatedProducts = async (
+  page: number
+): Promise<PaginatedProductsResponse> => {
+  const response = await apiClient.get<PaginatedProductsResponse>(
+    `/products?page=${page}&limit=${ITEMS_PER_PAGE}`
+  );
   return response.data;
 };
 
-const fetchBrands = async (): Promise<string[]> => {
-  const response = await apiClient.get<string[]>("/products/brands");
-  return response.data.sort();
-};
-
-const fetchCategories = async (): Promise<string[]> => {
-  const response = await apiClient.get<string[]>("/products/categories");
-  return response.data.sort();
-};
-
 const ProductCatalogPage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState(
-    () => new Set<string>()
-  );
-  const [selectedBrands, setSelectedBrands] = useState(() => new Set<string>());
+  const navigate = useNavigate();
+  const { pageNumber } = useParams();
 
-  const { data: products, isLoading: isLoadingProducts } = useQuery({
-    queryKey: ["products"],
-    queryFn: fetchAllProducts,
-  });
-  useQuery({
-    queryKey: ["brands"],
-    queryFn: fetchBrands,
-  });
-  useQuery({
-    queryKey: ["categories"],
-    queryFn: fetchCategories,
+  const currentPage = parseInt(pageNumber || "1", 10);
+
+  const { data, isLoading, error } = useQuery<PaginatedProductsResponse>({
+    queryKey: ["products", currentPage],
+    queryFn: () => fetchPaginatedProducts(currentPage),
+    placeholderData: keepPreviousData,
   });
 
-  const filteredProducts = useMemo(() => {
-    if (!products) return [];
+  const products = data?.products;
+  const totalPages = data?.totalPages || 1;
 
-    const categoryLabels = Array.from(selectedCategories).map((val) =>
-      val.replace(/-/g, " ").toLowerCase()
-    );
-    const brandLabels = Array.from(selectedBrands).map((val) =>
-      val.replace(/-/g, " ").toLowerCase()
-    );
+  const handlePageChange = (page: number) => {
+    navigate(`/products/page/${page}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-    return products.filter((product) => {
-      const searchMatch = product.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      const categoryMatch =
-        categoryLabels.length === 0 ||
-        categoryLabels.includes(product.category.toLowerCase());
-      const brandMatch =
-        brandLabels.length === 0 ||
-        brandLabels.includes(product.brand.toLowerCase());
-      return searchMatch && categoryMatch && brandMatch;
-    });
-  }, [products, searchQuery, selectedCategories, selectedBrands]);
+  const handleSearch = (params: any) => {
+    console.log("Search params changed:", params);
+    // In the future, this will refetch data with new query parameters
+    // e.g., navigate('/products/page/1?query=...&brand=...')
+    handlePageChange(1);
+  };
 
   return (
     <div className="catalog__page">
@@ -80,14 +58,18 @@ const ProductCatalogPage = () => {
       </header>
       <SearchFilters onSearch={handleSearch} />
       <section className="catalog__product-grid">
-        {isLoadingProducts ? (
-          <p>Loading...</p>
-        ) : (
-          filteredProducts.map((product) => (
+        {isLoading && <p>Loading...</p>}
+        {error && <p>Error fetching products.</p>}
+        {products &&
+          products.map((product: Product) => (
             <ProductCard key={product.id} product={product} />
-          ))
-        )}
+          ))}
       </section>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

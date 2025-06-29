@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { useCart } from "../hooks/useCart"; // We will use more functions from this hook
-import apiClient from "../api/client"; // Use our central API client
+import { useCart } from "../hooks/useCart";
+import apiClient from "../api/client";
 import type { Product } from "../types/product";
 
-// Updated fetch function using our apiClient
 const fetchProducts = async (): Promise<Product[]> => {
-  const response = await apiClient.get<Product[]>("/products");
+  const response = await apiClient.get<Product[]>("/products/all");
   return response.data;
 };
 

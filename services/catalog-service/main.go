@@ -50,6 +50,7 @@ func main() {
 
 	// --- Define Routes ---
 	// Public "read" endpoints - NO middleware
+	mux.HandleFunc("GET /api/products/all", env.getAllProductsHandler)
 	mux.HandleFunc("GET /api/products", env.getProductsHandler)
 	mux.HandleFunc("GET /api/products/{id}", env.getProductByIDHandler)
 	mux.HandleFunc("GET /api/products/brands", env.getUniqueBrandsHandler)
