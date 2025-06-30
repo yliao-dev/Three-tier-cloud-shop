@@ -25,4 +25,7 @@ spec:
               containerPort: 8081
               protocol: TCP
           envFrom:
-          {{- toYaml .Values.envFrom | nindent 14 }}
+          {{- range .Values.envFrom }}
+            - secretRef:
+                name: {{ .secretRef.name }}
+          {{- end }}
