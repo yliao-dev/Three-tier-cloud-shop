@@ -1,0 +1,55 @@
+name: CI - Build and Push Docker Images
+
+# This workflow runs on pushes to the main branch
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+
+jobs:
+  build-and-push:
+    name: Build and Push - ${{ matrix.service }}
+    runs-on: ubuntu-latest
+
+    # This strategy creates a parallel job for each service
+    strategy:
+      matrix:
+        service:
+          - user-service
+          - catalog-service
+          - cart-service
+          - checkout-service
+          - notification-service
+          - payment-service
+          - frontend
+
+    steps:
+      # Step 1: Check out your repository code
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      # Step 2: Configure AWS credentials
+      # This action configures the AWS CLI with credentials stored in GitHub Secrets.
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1 # Change this to your AWS region
+
+      # Step 3: Log in to Amazon ECR
+      # This gets a login password from ECR and configures Docker.
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # Step 4: Build, tag, and push image to Amazon ECR
+      # This step uses the login information from the previous step.
+      - name: Build and push Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ matrix.service }} # The repo name matches the service name
+          IMAGE_TAG: ${{ github.sha }} # Use the commit SHA for a unique tag
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./services/${{ matrix.service }}/Dockerfile ./services/${{ matrix.service }}
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
