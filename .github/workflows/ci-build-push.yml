@@ -44,12 +44,20 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       # Step 4: Build, tag, and push image to Amazon ECR
-      # This step uses the login information from the previous step.
       - name: Build and push Docker image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ matrix.service }} # The repo name matches the service name
-          IMAGE_TAG: ${{ github.sha }} # Use the commit SHA for a unique tag
+          ECR_REPOSITORY: ${{ matrix.service }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./services/${{ matrix.service }}/Dockerfile ./services/${{ matrix.service }}
+          # This 'if' statement checks if the current job is for the frontend
+          if [ "${{ matrix.service }}" = "frontend" ]; then
+            # If it is, use the correct path for the frontend Dockerfile and context
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./frontend/Dockerfile ./frontend
+          else
+            # Otherwise, use the standard path for all backend services
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./services/${{ matrix.service }}/Dockerfile ./services/${{ matrix.service }}
+          fi
+
+          # The push command is the same for all services
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
