@@ -1,23 +1,17 @@
-# Default values for user-service chart.
-
 replicaCount: 1
 
 image:
-  # The ECR repository URI for your user-service image
   repository: 279663581923.dkr.ecr.us-west-1.amazonaws.com/user-service
   pullPolicy: IfNotPresent
-  # The image tag to deploy
-  tag: "latest"
-
-# A list of Kubernetes Secrets to load as environment variables
-envFromSecrets:
-  - mongodb-secret
-  - jwt-secret
+  # The tag is intentionally left blank. We override it with --set
+  tag: ""
 
 service:
-  type: ClusterIP # Exposes the service only inside the cluster
-  port: 8081 # The port the service is exposed on within the cluster
+  type: ClusterIP
+  port: 8081
 
-# We are not creating an Ingress for this backend service directly
-ingress:
-  enabled: false
+envFrom:
+  - secretRef:
+      name: mongodb-secret
+  - secretRef:
+      name: jwt-secret
