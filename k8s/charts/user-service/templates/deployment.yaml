@@ -1,31 +1,28 @@
+# In k8s/charts/user-service/templates/deployment.yaml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-user-service
-  labels:
-    app: user-service
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: user-service
-      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
         app: user-service
-        release: {{ .Release.Name }}
     spec:
       containers:
         - name: user-service
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 8081
-              protocol: TCP
+            - containerPort: 8081
+          # This is the standard way to load all keys from a secret as environment variables.
           envFrom:
-          {{- range .Values.envFrom }}
             - secretRef:
-                name: {{ .secretRef.name }}
-          {{- end }}
+                name: mongodb-secret
+            - secretRef:
+                name: jwt-secret
