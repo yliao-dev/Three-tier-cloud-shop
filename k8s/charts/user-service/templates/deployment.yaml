@@ -1,28 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-user-service
-  labels:
-    app: user-service
+  name: {{ .Release.Name }}-{{ .Chart.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: user-service
-      release: {{ .Release.Name }}
+      app: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: user-service
-        release: {{ .Release.Name }}
+        app: {{ .Chart.Name }}
     spec:
       containers:
-        - name: user-service
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 8081
-              protocol: TCP
+            - containerPort: {{ .Values.service.port }}
           envFrom:
-          {{- toYaml .Values.envFrom | nindent 14 }}
+            {{- toYaml .Values.envFrom | nindent 12 }}
