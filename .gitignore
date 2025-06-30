@@ -3,3 +3,20 @@
 **/tmp/
 services/catalog-service/tmp/main
 .DS_Store
+
+
+# --- Terraform ---
+# Ignore local Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Ignore the directory containing local provider plugins
+.terraform/
+
+# Ignore crash log files
+crash.log
+crash.*.log
+
+# Ignore files containing sensitive variables
+*.tfvars
+*.tfvars.json
