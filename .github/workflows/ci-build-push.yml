@@ -48,16 +48,19 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ matrix.service }}
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG_SHA: ${{ github.sha }}
+          IMAGE_TAG_LATEST: latest
         run: |
-          # This 'if' statement checks if the current job is for the frontend
+          # Build the image once and tag it with the commit SHA
           if [ "${{ matrix.service }}" = "frontend" ]; then
-            # If it is, use the correct path for the frontend Dockerfile and context
-            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./frontend/Dockerfile ./frontend
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_SHA -f ./frontend/Dockerfile ./frontend
           else
-            # Otherwise, use the standard path for all backend services
-            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./services/${{ matrix.service }}/Dockerfile ./services/${{ matrix.service }}
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_SHA -f ./services/${{ matrix.service }}/Dockerfile ./services/${{ matrix.service }}
           fi
 
-          # The push command is the same for all services
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          # Add the 'latest' tag to the same image
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_SHA $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_LATEST
+
+          # Push both tags to ECR
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_SHA
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_LATEST
