@@ -1,0 +1,13 @@
+replicaCount: 1
+
+image:
+  repository: 279663581923.dkr.ecr.us-west-1.amazonaws.com/notification-service
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  enabled: false
+
+envFrom:
+  - secretRef:
+      name: rabbitmq-secret
