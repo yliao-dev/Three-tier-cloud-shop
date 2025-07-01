@@ -53,7 +53,7 @@ jobs:
         run: |
           # Build the image once and tag it with the commit SHA
           if [ "${{ matrix.service }}" = "frontend" ]; then
-            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_SHA -f ./frontend/Dockerfile ./frontend
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_SHA -f ./frontend/Dockerfile.prod ./frontend
           else
             docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_SHA -f ./services/${{ matrix.service }}/Dockerfile ./services/${{ matrix.service }}
           fi
