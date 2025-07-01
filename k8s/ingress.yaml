@@ -6,12 +6,15 @@ metadata:
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
+    # This annotation tells the ALB to check the health of the frontend
+    # The health check path should be the root, which our new nginx.conf handles.
+    alb.ingress.kubernetes.io/healthcheck-path: /
 spec:
   ingressClassName: alb
   rules:
     - http:
         paths:
-          # --- API Gateway Routes (Unchanged) ---
+          # --- API Gateway Routes ---
           - path: /api/users
             pathType: Prefix
             backend:
@@ -48,32 +51,8 @@ spec:
                 port:
                   number: 8084
 
-          # --- Frontend Route (Updated with Health Check Fix) ---
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: frontend-release-frontend
-                port:
-                  number: 80
----
-# This separate Ingress is for adding specific annotations JUST for the frontend service.
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: cloud-shop-ingress-frontend-healthcheck
-  namespace: cloud-shop
-  annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    # --- THIS IS THE FIX ---
-    # Tell the ALB to consider 200-499 status codes as healthy for the frontend.
-    alb.ingress.kubernetes.io/success-codes: 200-499
-spec:
-  ingressClassName: alb
-  rules:
-    - http:
-        paths:
+          # --- Frontend Route ---
+          # This default rule sends all other traffic to the frontend.
           - path: /
             pathType: Prefix
             backend:
