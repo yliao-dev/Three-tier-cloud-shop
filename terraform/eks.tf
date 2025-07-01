@@ -1,4 +1,3 @@
-# In terraform/eks.tf
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
@@ -23,6 +22,8 @@ module "eks" {
     }
   }
 
+  # In terraform/eks.tf
+
   eks_managed_node_groups = {
     main_nodes = {
       instance_types = ["t3.small"]
@@ -30,13 +31,21 @@ module "eks" {
       max_size     = 3
       desired_size = 2
 
-      # This attaches the necessary IAM policy to the worker nodes' role,
-      # allowing them to create and manage EBS volumes for Redis.
+      # This block attaches all necessary policies to the worker nodes.
       iam_role_additional_policies = {
-        EBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-        # This policy allows nodes to pull images from ECR
-        ECRReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+        # These are the other policies we need for storage and pulling images
+        EBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy",
+        ECRReadOnly        = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
       }
     }
   }
+}
+
+resource "aws_security_group_rule" "allow_alb_to_nodes" {
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 0
+  protocol                 = "-1"
+  security_group_id        = module.eks.node_security_group_id
+  source_security_group_id = module.eks.cluster_primary_security_group_id
 }
