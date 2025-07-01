@@ -34,6 +34,8 @@ module "eks" {
       # allowing them to create and manage EBS volumes for Redis.
       iam_role_additional_policies = {
         EBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+        # This policy allows nodes to pull images from ECR
+        ECRReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
       }
     }
   }
