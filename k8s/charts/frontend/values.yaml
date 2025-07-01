@@ -1,0 +1,14 @@
+replicaCount: 2 # It's good practice to run at least two replicas for a stateless frontend
+
+image:
+  repository: 279663581923.dkr.ecr.us-west-1.amazonaws.com/frontend
+  pullPolicy: IfNotPresent
+  # The tag is intentionally left blank. We override it with --set
+  tag: "latest"
+
+service:
+  enabled: true
+  type: ClusterIP
+  port: 80
+
+envFrom: []
