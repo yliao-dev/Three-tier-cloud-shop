@@ -1,0 +1,13 @@
+replicaCount: 1
+
+image:
+  repository: 279663581923.dkr.ecr.us-west-1.amazonaws.com/payment-service
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  enabled: true
+  type: ClusterIP
+  port: 8085
+
+envFrom: []

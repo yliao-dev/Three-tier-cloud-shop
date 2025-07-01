@@ -1,0 +1,32 @@
+# In k8s/rabbitmq-values.yaml
+
+# --- Authentication ---
+# Create a dedicated user instead of using the default 'guest'
+auth:
+  username: user
+  password: password
+
+# --- Deployment Settings ---
+# Run only one instance, which is all we need for this project.
+replicaCount: 1
+
+# --- Persistence Settings ---
+# This is the key fix: disable persistent storage.
+# The pod will use temporary storage, avoiding all EBS driver and permission issues.
+persistence:
+  enabled: false
+
+# --- Health Check Settings ---
+# Use a simple, reliable diagnostic command for health checks instead of the complex HTTP one.
+readinessProbe:
+  exec:
+    command:
+      - rabbitmq-diagnostics
+      - -q
+      - check_running
+livenessProbe:
+  exec:
+    command:
+      - rabbitmq-diagnostics
+      - -q
+      - check_running

@@ -1,0 +1,17 @@
+replicaCount: 1
+
+image:
+  repository: 279663581923.dkr.ecr.us-west-1.amazonaws.com/catalog-service
+  pullPolicy: IfNotPresent
+  # The tag is intentionally left blank. We override it with --set
+  tag: ""
+
+service:
+  type: ClusterIP
+  port: 8082
+
+envFrom:
+  - secretRef:
+      name: mongodb-secret
+  - secretRef:
+      name: jwt-secret

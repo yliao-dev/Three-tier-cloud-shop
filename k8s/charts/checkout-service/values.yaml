@@ -1,0 +1,18 @@
+replicaCount: 1
+
+image:
+  repository: 279663581923.dkr.ecr.us-west-1.amazonaws.com/checkout-service
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 8084
+
+envFrom:
+  - secretRef:
+      name: mongodb-secret
+  - secretRef:
+      name: jwt-secret
+  - secretRef:
+      name: rabbitmq-secret

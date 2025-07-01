@@ -13,8 +13,15 @@ module "eks" {
   cluster_endpoint_public_access  = true
   cluster_endpoint_private_access = true
 
-  # This is the single, correct line to grant admin permissions.
   enable_cluster_creator_admin_permissions = true
+
+  cluster_addons = {
+    aws-ebs-csi-driver = {
+      # This is the fix. It tells the module to create a dedicated IAM Role
+      # for the EBS CSI Driver's service account and attach the correct policy to it.
+      create_iam_role = true
+    }
+  }
 
   eks_managed_node_groups = {
     main_nodes = {
@@ -22,6 +29,12 @@ module "eks" {
       min_size     = 1
       max_size     = 3
       desired_size = 2
+
+      # This attaches the necessary IAM policy to the worker nodes' role,
+      # allowing them to create and manage EBS volumes for Redis.
+      iam_role_additional_policies = {
+        EBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+      }
     }
   }
 }
