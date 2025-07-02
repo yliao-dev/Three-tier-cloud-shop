@@ -9,6 +9,9 @@ service:
   type: ClusterIP
   port: 8084
 
+env:
+  CART_SERVICE_URL: "http://cart-service-release-cart-service:8083/api/cart"
+
 envFrom:
   - secretRef:
       name: mongodb-secret

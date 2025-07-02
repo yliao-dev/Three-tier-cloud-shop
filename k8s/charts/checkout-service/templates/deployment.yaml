@@ -18,5 +18,9 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.service.port }}
+          env:
+            - name: CART_SERVICE_URL
+              value: {{ .Values.env.CART_SERVICE_URL | quote }}
+
           envFrom:
             {{- toYaml .Values.envFrom | nindent 12 }}

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"sort"
 	"strconv"
 )
@@ -77,39 +78,42 @@ func (env *Env) getCartHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(detailedItems)
 }
 
-// getProductDetailsBatch calls the new batch endpoint on the catalog-service.
-// user need to fetch accurate, most update-to-date data from catalog-service
-// like price, name
 func (env *Env) getProductDetailsBatch(skus []string) ([]Product, error) {
-	url := "http://catalog-service:8082/api/products/batch-get"
+    // Read the catalog service URL from an environment variable.
+    // This decouples the code from the environment.
+    catalogServiceURL := os.Getenv("CATALOG_SERVICE_URL")
+    if catalogServiceURL == "" {
+        // Provide a local default for development.
+        catalogServiceURL = "http://localhost:8082/api/products/batch-get"
+    }
 
-	requestBody, err := json.Marshal(map[string][]string{"skus": skus})
-	if err != nil {
-		return nil, fmt.Errorf("failed to create request body: %w", err)
-	}
+    requestBody, err := json.Marshal(map[string][]string{"skus": skus})
+    if err != nil {
+        return nil, fmt.Errorf("failed to create request body: %w", err)
+    }
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(requestBody))
-	if err != nil {
-		return nil, fmt.Errorf("failed to create batch request: %w", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
+    req, err := http.NewRequest("POST", catalogServiceURL, bytes.NewBuffer(requestBody))
+    if err != nil {
+        return nil, fmt.Errorf("failed to create batch request: %w", err)
+    }
+    req.Header.Set("Content-Type", "application/json")
 
-	resp, err := env.httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to call catalog service: %w", err)
-	}
-	defer resp.Body.Close()
+    resp, err := env.httpClient.Do(req)
+    if err != nil {
+        return nil, fmt.Errorf("failed to call catalog service: %w", err)
+    }
+    defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("catalog-service returned non-200 status: %d", resp.StatusCode)
-	}
+    if resp.StatusCode != http.StatusOK {
+        return nil, fmt.Errorf("catalog-service returned non-200 status: %d", resp.StatusCode)
+    }
 
-	var products []Product
-	if err := json.NewDecoder(resp.Body).Decode(&products); err != nil {
-		return nil, fmt.Errorf("failed to decode product details: %w", err)
-	}
+    var products []Product
+    if err := json.NewDecoder(resp.Body).Decode(&products); err != nil {
+        return nil, fmt.Errorf("failed to decode product details: %w", err)
+    }
 
-	return products, nil
+    return products, nil
 }
 
 // addItemHandler now uses the specific request struct

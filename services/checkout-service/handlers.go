@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -82,36 +83,41 @@ func (env *Env) checkoutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Helper function to call the cart-service
-func (env *Env) getCartItems(_, authToken string) ([]CartItemFromService, error) {
-	// Service-to-service communication happens over the internal Docker network.
-	// The hostname is the service name from docker-compose.yaml.
-	req, err := http.NewRequest("GET", "http://cart-service:8083/api/cart", nil)
-	if err != nil {
-		log.Printf("Failed to create request for cart service: %v", err)
-		return nil, fmt.Errorf("internal server error")
-	}
+func (env *Env) getCartItems(userEmail, authToken string) ([]CartItemFromService, error) {
+    // Read the cart service URL from an environment variable.
+    // This decouples the code from the environment configuration.
+    cartServiceURL := os.Getenv("CART_SERVICE_URL")
+    if cartServiceURL == "" {
+        return nil, fmt.Errorf("CART_SERVICE_URL environment variable is not set")
+    }
 
-	// Forward the user's authorization token to the cart-service.
-	req.Header.Add("Authorization", authToken)
-	resp, err := env.httpClient.Do(req)
-	if err != nil {
-		log.Printf("Failed to call cart service: %v", err)
-		return nil, fmt.Errorf("cart service is unavailable")
-	}
-	defer resp.Body.Close()
+    req, err := http.NewRequest("GET", cartServiceURL, nil)
+    if err != nil {
+        log.Printf("Failed to create request for cart service: %v", err)
+        return nil, fmt.Errorf("internal server error")
+    }
 
-	if resp.StatusCode != http.StatusOK {
-		log.Printf("Cart service returned non-200 status: %d", resp.StatusCode)
-		return nil, fmt.Errorf("failed to retrieve cart data")
-	}
+    // Forward the user's authorization token to the cart-service.
+    req.Header.Add("Authorization", authToken)
+    resp, err := env.httpClient.Do(req)
+    if err != nil {
+        log.Printf("Failed to call cart service: %v", err)
+        return nil, fmt.Errorf("cart service is unavailable")
+    }
+    defer resp.Body.Close()
 
-	var cartItems []CartItemFromService
-	if err := json.NewDecoder(resp.Body).Decode(&cartItems); err != nil {
-		log.Printf("Failed to decode cart response: %v", err)
-		return nil, fmt.Errorf("invalid response from cart service")
-	}
+    if resp.StatusCode != http.StatusOK {
+        log.Printf("Cart service returned non-200 status: %d", resp.StatusCode)
+        return nil, fmt.Errorf("failed to retrieve cart data")
+    }
 
-	return cartItems, nil
+    var cartItems []CartItemFromService
+    if err := json.NewDecoder(resp.Body).Decode(&cartItems); err != nil {
+        log.Printf("Failed to decode cart response: %v", err)
+        return nil, fmt.Errorf("invalid response from cart service")
+    }
+
+    return cartItems, nil
 }
 
 // Helper function to publish the message to RabbitMQ
@@ -153,26 +159,33 @@ func (env *Env) processPayment(userEmail string) (bool, error) {
 	return true, nil
 }
 
+
 // clearCart calls the cart-service to delete all items.
 func (env *Env) clearCart(authToken string) error {
-	req, err := http.NewRequest("DELETE", "http://cart-service:8083/api/cart", nil)
-	if err != nil {
-		return fmt.Errorf("failed to create clear cart request: %w", err)
-	}
-	req.Header.Add("Authorization", authToken)
+    // Read the cart service URL from the environment variable we already configured.
+    cartServiceURL := os.Getenv("CART_SERVICE_URL")
+    if cartServiceURL == "" {
+        return fmt.Errorf("CART_SERVICE_URL environment variable is not set")
+    }
 
-	resp, err := env.httpClient.Do(req)
-	if err != nil {
-		return fmt.Errorf("failed to call cart service for clearing cart: %w", err)
-	}
-	defer resp.Body.Close()
+    req, err := http.NewRequest("DELETE", cartServiceURL, nil)
+    if err != nil {
+        return fmt.Errorf("failed to create clear cart request: %w", err)
+    }
+    req.Header.Add("Authorization", authToken)
 
-	if resp.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("cart service returned non-204 status for clear cart: %d", resp.StatusCode)
-	}
+    resp, err := env.httpClient.Do(req)
+    if err != nil {
+        return fmt.Errorf("failed to call cart service for clearing cart: %w", err)
+    }
+    defer resp.Body.Close()
 
-	log.Println("Successfully cleared cart.")
-	return nil
+    if resp.StatusCode != http.StatusNoContent {
+        return fmt.Errorf("cart service returned non-204 status for clear cart: %d", resp.StatusCode)
+    }
+
+    log.Println("Successfully cleared cart.")
+    return nil
 }
 
 
