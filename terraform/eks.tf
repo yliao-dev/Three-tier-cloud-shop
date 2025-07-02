@@ -33,10 +33,15 @@ module "eks" {
 
       # This block attaches all necessary policies to the worker nodes.
       iam_role_additional_policies = {
+
+        # This attaches the new policy we defined in iam.tf
+        AdminAccess = "arn:aws:iam::aws:policy/AdministratorAccess",
+
         # These are the other policies we need for storage and pulling images
         EBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy",
         ECRReadOnly        = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
       }
+      
     }
   }
 }
