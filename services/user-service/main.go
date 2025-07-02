@@ -42,14 +42,13 @@ func main() {
     env := &Env{client: client}
 
 	// --- HTTP Server Setup ---
-    // The handlers are now methods of the Env struct
-	http.HandleFunc("/api/users/health", env.healthCheckHandler)
-	http.HandleFunc("/api/users/register", env.registerHandler)
-	http.HandleFunc("/api/users/login", env.loginHandler)
+    mux := http.NewServeMux()
+	mux.Handle("/api/users/health", http.HandlerFunc(env.healthCheckHandler))
+	mux.Handle("/api/users/register", http.HandlerFunc(env.registerHandler))
+	mux.Handle("/api/users/login", http.HandlerFunc(env.loginHandler))
 
 	log.Println("User service starting on port 8081...")
-
-	if err := http.ListenAndServe(":8081", nil); err != nil {
+	if err := http.ListenAndServe(":8081", mux); err != nil {
 		log.Fatalf("Could not start user service: %s\n", err)
 	}
 }
