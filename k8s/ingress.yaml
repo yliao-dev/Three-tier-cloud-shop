@@ -13,7 +13,7 @@ spec:
   rules:
     - http:
         paths:
-          # --- API Gateway Routes (Unchanged) ---
+          # --- API Gateway Routes ---
           - path: /api/users
             pathType: Prefix
             backend:
@@ -50,7 +50,7 @@ spec:
                 port:
                   number: 8084
 
-          # --- Frontend Route (Updated with Health Check Fix) ---
+          # --- Frontend Route ---
           - path: /
             pathType: Prefix
             backend:
