@@ -1,0 +1,14 @@
+# In k8s/redis-values.yaml
+
+# Disable authentication for simplicity in our dev environment.
+auth:
+  enabled: false
+
+# This is the key fix: do not deploy any high-availability replicas.
+replica:
+  replicaCount: 0
+
+# Also disable persistence for the master to avoid storage issues.
+master:
+  persistence:
+    enabled: false

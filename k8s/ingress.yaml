@@ -13,7 +13,7 @@ spec:
   rules:
     - http:
         paths:
-          # --- API Routes ---
+          # --- API Gateway Routes ---
           - path: /api/users
             pathType: Prefix
             backend:
@@ -51,6 +51,31 @@ spec:
                   number: 8084
 
           # --- Frontend Route ---
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-release-frontend
+                port:
+                  number: 80
+---
+# This separate Ingress is for adding specific annotations JUST for the frontend service.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cloud-shop-ingress-frontend-healthcheck
+  namespace: cloud-shop
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    # --- THIS IS THE FIX ---
+    # Tell the ALB to consider 200-499 status codes as healthy for the frontend.
+    alb.ingress.kubernetes.io/success-codes: 200-499
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
           - path: /
             pathType: Prefix
             backend:
