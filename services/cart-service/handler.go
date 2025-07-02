@@ -82,7 +82,8 @@ func (env *Env) getCartHandler(w http.ResponseWriter, r *http.Request) {
 func (env *Env) getProductDetailsBatch(skus []string) ([]Product, error) {
     // Read the catalog service URL from an environment variable.
     // This decouples the code from the environment.
-    catalogServiceURL := os.Getenv("CATALOG_SERVICE_URL")
+    log.Printf("Attempting to use httpClient. Is it nil? %v", env.httpClient == nil)
+	catalogServiceURL := os.Getenv("CATALOG_SERVICE_URL")
     if catalogServiceURL == "" {
         // Provide a local default for development.
         catalogServiceURL = "http://localhost:8082/api/products/batch-get"
