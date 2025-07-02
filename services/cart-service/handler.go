@@ -11,6 +11,11 @@ import (
 	"strconv"
 )
 
+func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("{\"status\":\"ok\"}"))
+}
+
 func (env *Env) getCartHandler(w http.ResponseWriter, r *http.Request) {
 	userEmail := r.Context().Value(UserEmailKey).(string)
 	cartKey := "cart:" + userEmail

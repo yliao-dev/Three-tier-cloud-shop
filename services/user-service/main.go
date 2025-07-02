@@ -43,7 +43,8 @@ func main() {
 
 	// --- HTTP Server Setup ---
     mux := http.NewServeMux()
-	mux.Handle("/api/users/health", http.HandlerFunc(env.healthCheckHandler))
+	mux.HandleFunc("GET /healthz", healthCheckHandler)
+	// The handlers are now methods of the Env struct
 	mux.Handle("/api/users/register", http.HandlerFunc(env.registerHandler))
 	mux.Handle("/api/users/login", http.HandlerFunc(env.loginHandler))
 

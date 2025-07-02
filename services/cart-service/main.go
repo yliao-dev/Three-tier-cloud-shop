@@ -37,7 +37,7 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
-
+	mux.HandleFunc("GET /healthz", healthCheckHandler)
 	// Routes remain the same, but the getCartHandler will now be much smarter.
 	mux.Handle("GET /api/cart", jwtMiddleware(http.HandlerFunc(env.getCartHandler)))
 	mux.Handle("POST /api/cart/items", jwtMiddleware(http.HandlerFunc(env.addItemHandler)))

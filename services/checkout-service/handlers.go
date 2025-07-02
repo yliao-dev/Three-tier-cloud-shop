@@ -14,6 +14,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("{\"status\":\"ok\"}"))
+}
+
 // This is the main orchestration handler for the checkout process.
 func (env *Env) checkoutHandler(w http.ResponseWriter, r *http.Request) {
 	// The user's identity is retrieved from the JWT middleware.
