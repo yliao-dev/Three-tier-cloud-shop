@@ -4,7 +4,7 @@ image:
   repository: 279663581923.dkr.ecr.us-west-1.amazonaws.com/cart-service
   pullPolicy: IfNotPresent
   # The tag is intentionally left blank. We override it with --set
-  tag: ""
+  tag: "latest"
 
 service:
   type: ClusterIP
