@@ -24,6 +24,7 @@ func (env *Env) getCartHandler(w http.ResponseWriter, r *http.Request) {
 	// 1. Get basic cart data (SKU -> quantity) from Redis
 	cartItemsMap, err := env.rdb.HGetAll(context.Background(), cartKey).Result()
 	if err != nil {
+		log.Printf("ERROR calling catalog-service: %v", err) 
 		http.Error(w, "Failed to retrieve cart", http.StatusInternalServerError)
 		return
 	}
