@@ -6,6 +6,8 @@ metadata:
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
+    # This sets the default health check path for all services
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
 spec:
   ingressClassName: alb
   rules:

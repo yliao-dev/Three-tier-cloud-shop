@@ -17,6 +17,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+
+func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("{\"status\":\"ok\"}"))
+}
+
 // getAllProductsHandler returns the complete list of all products without pagination.
 func (env *Env) getAllProductsHandler(w http.ResponseWriter, r *http.Request) {
 	cursor, err := env.collection.Find(context.TODO(), bson.D{})

@@ -13,10 +13,9 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// healthCheckHandler provides a simple health check endpoint.
-func (env *Env) healthCheckHandler(w http.ResponseWriter, r *http.Request) {
-    w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(map[string]string{"status": "ok", "service": "user-service"})
+func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("{\"status\":\"ok\"}"))
 }
 
 func (env *Env) registerHandler(w http.ResponseWriter, r *http.Request) {

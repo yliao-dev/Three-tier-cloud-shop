@@ -73,6 +73,7 @@ func main() {
 
 	// --- Routing: Use the new Go 1.22+ ServeMux ---
 	mux := http.NewServeMux()
+	mux.HandleFunc("GET /healthz", healthCheckHandler)
 	mux.Handle("POST /api/checkout", jwtMiddleware(http.HandlerFunc(env.checkoutHandler)))
     mux.Handle("GET /api/orders", jwtMiddleware(http.HandlerFunc(env.getOrdersForUserHandler)))
 
